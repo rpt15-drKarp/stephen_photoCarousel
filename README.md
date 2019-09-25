@@ -1,13 +1,14 @@
-# Project Name
+# Steam Photo Carousel
 
-> Project description
+> Create a clone of a game page on the Steam website
 
 ## Related Projects
 
-  - https://github.com/teamName/repo
-  - https://github.com/teamName/repo
-  - https://github.com/teamName/repo
-  - https://github.com/teamName/repo
+  - <a href="https://github.com/rpt15-drKarp/Richard_Reviews">reviews:3001</a>
+  - https://github.com/rpt15-drKarp/Therese_Proxy
+  - https://github.com/rpt15-drKarp/Therese_aboutGame
+  - https://github.com/rpt15-drKarp/stephen_proxy
+  - https://github.com/rpt15-drKarp/alastair_overview
 
 ## Table of Contents
 
