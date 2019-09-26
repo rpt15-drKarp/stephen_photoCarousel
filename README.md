@@ -13,20 +13,20 @@
 ## Table of Contents
 
 1. [Usage](#Usage)
-  - [1.1 API Endpoints](#1.1-api-end-points)
+   - [1.1 API Endpoints](#1.1-api-end-points)
 2. [Development Setup](#development-setup)
-  - [2.1 MySQL Setup](#2.1-mysql-setup)
-  - [2.2 Riak Setup](#2.2-riak-setup)
-  - [2.3 React Build Setup](#2.3-react-build-setup)
+   - [2.1 MySQL Setup](#2.1-mysql-setup)
+   - [2.2 Riak Setup](#2.2-riak-setup)
+   - [2.3 React Build Setup](#2.3-react-build-setup)
 3. [Log](#log)
-  - [3.1 Development Setup](#3.1-development-setup)
+   - [3.1 Development Setup](#3.1-development-setup)
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
 
 This service is the photo carousel component of the page which will give the users the ability to scroll through different screenshots from the game.
 
-## 1.1 API End Points
+### 1.1 API End Points
  - `GET /api/images/:gameId` 
    - returns all images that are relevant to a specific game
  - `POST /api/images/:gameId`
@@ -59,12 +59,12 @@ This service is the photo carousel component of the page which will give the use
 ## 2. Development Setup
 test
 
-## 2.1 MySQL Setup
+### 2.1 MySQL Setup
 
-## 2.2 Riak Setup
+### 2.2 Riak Setup
 
-## 2.3 React Build Setup
+### 2.3 React Build Setup
 
 ## 3. Log
 
-## 3.1 Development Setup
+### 3.1 Development Setup
