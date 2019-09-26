@@ -4,19 +4,20 @@
 
 ## Related Projects
 
+  - <a href="https://github.com/rpt15-drKarp/alastair_overview">overview:3000</a>
   - <a href="https://github.com/rpt15-drKarp/Richard_Reviews">reviews:3001</a>
-  - https://github.com/rpt15-drKarp/Therese_Proxy
-  - https://github.com/rpt15-drKarp/Therese_aboutGame
-  - https://github.com/rpt15-drKarp/stephen_proxy
-  - https://github.com/rpt15-drKarp/alastair_overview
+  - photoGallery:3002 (current)
+  - <a href="https://github.com/rpt15-drKarp/Therese_aboutGame">aboutGame:3003</a>
+  - <a href="https://github.com/rpt15-drKarp/stephen_proxy">proxy:3006</a>
 
 ## Table of Contents
 
 1. [Usage](#Usage)
-1. [Requirements](#requirements)
-1. [Development](#development)
+2. [Requirements](#requirements)
+3. [Development](#development)
+4. [Log](#log)
 
-## Usage
+## Usage options
 
 > Some usage instructions
 
@@ -28,13 +29,7 @@ An `nvmrc` file is included if using [nvm](https://github.com/creationix/nvm).
 - etc
 
 ## Development
+test
 
-### Installing Dependencies
-
-From within the root directory:
-
-```sh
-npm install -g webpack
-npm install
-```
-
+## Log
+test
