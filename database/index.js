@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 // mongoose.connect('mongodb://localhost/image', { useNewUrlParser: true });
-mongoose.connect('mongodb://mongo/image', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/image', { useNewUrlParser: true });
 
 let db = mongoose.connection;
 

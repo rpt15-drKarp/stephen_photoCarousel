@@ -25,7 +25,7 @@ class ImageCarousel extends React.Component {
   }
 
   componentDidMount() {
-    $.get(`http://ec2-13-57-33-155.us-west-1.compute.amazonaws.com/api/images/${this.state.gameId}`, (data) => {
+    $.get(`http://localhost:3002/api/images/${this.state.gameId}`, (data) => {
       this.setState({
         images: data,
         currentImage: data[0]
