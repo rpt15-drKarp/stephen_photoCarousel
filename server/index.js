@@ -6,6 +6,7 @@ const compression = require('compression');
 
 const app = express();
 
+app.use('/', express.static(__dirname + '/../client/dist'));
 app.use('/:gameId', express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -59,7 +60,10 @@ app.get('/api/images/:gameId/', (req, res) => {
         res.json(results);
       }
     });
-  // }
+  // switch code to something like this but need to make it work with the way that he's retrieving data and sending it back
+  // Images.retrieve(req.params.gameId, (gameInfo) => {
+  //   res.send(gameInfo);
+  // });
 });
 
 app.get('*.js', (req, res, next) => {
