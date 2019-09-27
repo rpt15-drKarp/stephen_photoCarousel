@@ -16,7 +16,7 @@
    - [1.1 API Endpoints](#11-api-end-points)
 2. [Development Setup](#development-setup)
    - [2.1 MySQL Setup](#21-mysql-setup)
-   - [2.2 Riak Setup](#22-riak-setup)
+   - [2.2 Cassandra Setup](#22-cassandra-setup)
    - [2.3 React Build Setup](#23-react-build-setup)
 3. [Log](#log)
    - [3.1 Development Setup](#31-development-setup)
@@ -61,7 +61,7 @@ test
 
 ### 2.1 MySQL Setup
 
-### 2.2 Riak Setup
+### 2.2 Cassandra Setup
 
 ### 2.3 React Build Setup
 
