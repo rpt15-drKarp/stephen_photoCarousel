@@ -19,7 +19,10 @@
    - [2.2 Cassandra Setup](#22-cassandra-setup)
    - [2.3 React Build Setup](#23-react-build-setup)
 3. [Log](#log)
-   - [3.1 Development Setup](#31-development-setup)
+   - [3.1 Set up CRUD endpoints](#31-set-up-crud-endpoints)
+   - [3.2 Set up Jest to test apis](#32-set-up-jest-to-test-apis)
+   - [3.2 Development Setup](#31-development-setup)
+
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
@@ -32,7 +35,7 @@ This service is the photo carousel component of the page which will give the use
  - `POST /api/images/:gameId`
    - adds more images to the photo carousel of a specific game
  - `PUT /api/images/:gameId`
-   - replaces an image in the photo carousel of a specific game
+   - replaces an image at random in the photo carousel of a specific game
  - `DELETE /api/images/:gameId`
    - deletes an image in the photo carousel of a specific game
 
@@ -55,7 +58,6 @@ This service is the photo carousel component of the page which will give the use
     }
  }
  ```
-
 ## 2. Development Setup
 test
 
@@ -67,4 +69,26 @@ test
 
 ## 3. Log
 
+### 3.1 Set Up CRUD Endpoints
+ - `GET /api/images/:gameId`
+   - returns all images that are relevant to a specific game
+ - `POST /api/images/:gameId`
+   - adds more images to the photo carousel of a specific game
+   - For this project, I decided to limit the number of images that a game can have to a maximum of 10. Since this is the case, my POST api will take the following steps to add an image to a game:
+     1. Retrieve the game data from the database
+     2. Check to see if the game already has 10 images
+     3. If it has 10 images, then console log that an existing image must be replaced
+     4. If it has less than 10 images, then add the new image to the last available image slot
+ - `PUT /api/images/:gameId`
+   - replaces an image at random in the photo carousel of a specific game
+   - I decided to have it randomly replace an image because I wanted to spend more time on optimizing and scaling my database and this appeared to be the simplest solution
+ - `DELETE /api/images/:gameId`
+   - deletes an image in the photo carousel of a specific game
+
+For my endpoints, since I need to update specific fields, I am using $set for mongoose which allows for that functionality.
+
+### 3.2 Set Up Jest to Test APIs
+
+
 ### 3.1 Development Setup
+

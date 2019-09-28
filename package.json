@@ -12,6 +12,7 @@
     "db:setup": "node database/seed.js",
     "build": "webpack -d --watch",
     "test": "jest",
+    "test:watch": "jest --watch",
     "dockerStart": "node database/seed.js && nodemon server/index.js"
   },
   "dependencies": {
