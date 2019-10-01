@@ -21,7 +21,9 @@
 3. [Log](#log)
    - [3.1 Set up CRUD endpoints](#31-set-up-crud-endpoints)
    - [3.2 Set up Jest to test apis](#32-set-up-jest-to-test-apis)
-   - [3.2 Development Setup](#31-development-setup)
+   - [3.3 Development Setup](#33-development-setup)
+     - [3.3.1 MySQL Setup](#331-mysql-setup)
+     - [3.3.2 Cassandra Setup](#332-cassandra-setup)
 
 
 ## 1. Usage
@@ -59,9 +61,54 @@ This service is the photo carousel component of the page which will give the use
  }
  ```
 ## 2. Development Setup
-test
 
 ### 2.1 MySQL Setup
+1. For macOS users, visit https://dev.mysql.com/doc/mysql-osx-excerpt/5.7/en/osx-installation.html for instructions on downloading the .dmg file and installing it.
+2. [Install mysql module through npm](https://www.npmjs.com/package/mysql#install)
+`npm i --save mysql`
+3. Create file to connect app to mySQL database
+Example code:
+```
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : 'secret'
+});
+
+connection.connect(function(err) {
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+  }
+
+  console.log('connected as id ' + connection.threadId);
+});
+```
+Make sure that the host, user, and password match what you have set up on your local machine.
+4. Create schema file
+```
+DROP DATABASE test;
+
+CREATE DATABASE test;
+
+USE test;
+
+CREATE TABLE testTable (
+  id INT NOT NULL AUTO_INCREMENT,
+  testRow TEXT NOT NULL UNIQUE,
+  PRIMARY KEY(id)
+);
+```
+
+#### How to connect to MySQL database from command line:
+`mysql -u USERNAME -p`
+By including -p, it'll prompt **Enter Password**. Enter your password and it'll direct you to the mySQL shell.
+
+
+
+#### How to upload mysql schema from file:
+
 
 ### 2.2 Cassandra Setup
 
@@ -89,6 +136,11 @@ For my endpoints, since I need to update specific fields, I am using $set for mo
 
 ### 3.2 Set Up Jest to Test APIs
 
+### 3.3 Development Setup
 
-### 3.1 Development Setup
+### 3.3.1 MySQL Setup
+Any trouble connecting to mySQL through command line?
+
+
+### 3.3.2 Cassandra Setup
 

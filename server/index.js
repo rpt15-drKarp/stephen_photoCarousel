@@ -4,6 +4,7 @@ const Images = require('../database/Image.js');
 const db = require('../database/Image.js');
 const cors = require('cors');
 const compression = require('compression');
+const dbMySQL = require('../database/mysql/index.js');
 
 const app = express();
 
@@ -75,7 +76,7 @@ app.get('*.js', (req, res, next) => {
 
 // POST endpoint
 app.post('/api/images/:gameId', (req, res) => {
-  db.save(req.body);
+  db.save(req.params.gameId, req.body);
 });
 
 // PUT endpoint
