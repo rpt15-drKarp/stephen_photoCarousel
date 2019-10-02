@@ -88,16 +88,32 @@ connection.connect(function(err) {
 Make sure that the host, user, and password match what you have set up on your local machine.
 4. Create schema file
 ```
-DROP DATABASE test;
+DROP DATABASE photoCarousel;
 
-CREATE DATABASE test;
+CREATE DATABASE IF NOT EXISTS photoCarousel;
 
-USE test;
+USE photoCarousel;
 
-CREATE TABLE testTable (
+CREATE TABLE IF NOT EXISTS games (
+  gameId INT NOT NULL AUTO_INCREMENT,
+  gameName VARCHAR(100) NOT NULL UNIQUE,
+  PRIMARY KEY(gameId)
+);
+
+CREATE TABLE IF NOT EXISTS images (
   id INT NOT NULL AUTO_INCREMENT,
-  testRow TEXT NOT NULL UNIQUE,
-  PRIMARY KEY(id)
+  gameId INT NOT NULL,
+  image1 VARCHAR(255) DEFAULT '',
+  image2 VARCHAR(255) DEFAULT '',
+  image3 VARCHAR(255) DEFAULT '',
+  image4 VARCHAR(255) DEFAULT '',
+  image5 VARCHAR(255) DEFAULT '',
+  image6 VARCHAR(255) DEFAULT '',
+  image7 VARCHAR(255) DEFAULT '',
+  image8 VARCHAR(255) DEFAULT '',
+  image9 VARCHAR(255) DEFAULT '',
+  image10 VARCHAR(255) DEFAULT '',}
+  FOREIGN KEY (gameId) REFERENCES games(gameId)
 );
 ```
 
@@ -108,6 +124,7 @@ By including -p, it'll prompt **Enter Password**. Enter your password and it'll 
 
 
 #### How to upload mysql schema from file:
+
 
 
 ### 2.2 Cassandra Setup
@@ -139,8 +156,20 @@ For my endpoints, since I need to update specific fields, I am using $set for mo
 ### 3.3 Development Setup
 
 ### 3.3.1 MySQL Setup
-Any trouble connecting to mySQL through command line?
+**First Issue**
+While setting up MySQL I ran into the issue of adding an object as the value in a column. I wanted my image row to contain an object with 10 images. I wasn't sure how I can set up my data so that when I pull from the mySQL database, I'll get an object with 10 images so that I can loop through it. I initially considered using 2 tables and making use of the foreign key to connect them but then I realized that I didn't need to do that. All I needed to do was create the object, use JSON.stringify and then add it as a value like I would anything else.
 
+I started testing my seeding script by seeding them in batches:
+10,000
+100,000
+
+I used the following query to make sure the rows were successfully added to my database:
+> SELECT COUNT(*) FROM games;
+
+**Second Issue**
+I received this error:
+> error connecting: Error: connect ETIMEDOUT
+    at Connection._handleConnectTimeout
 
 ### 3.3.2 Cassandra Setup
 

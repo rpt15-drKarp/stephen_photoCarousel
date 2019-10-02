@@ -10,6 +10,7 @@
   "scripts": {
     "start": "nodemon server/index.js",
     "db:setup": "node database/seed.js",
+    "mysql:setup": "node database/mysql/seed.js",
     "build": "webpack -d --watch",
     "test": "jest",
     "test:watch": "jest --watch",
