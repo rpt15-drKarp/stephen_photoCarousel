@@ -178,6 +178,10 @@ CREATE TABLE photo_carousel.games (
 );
 ```
 
+#### Connect node to Cassandra database
+
+#### Queries to use with Cassandra
+
 ### 2.3 React Build Setup
 
 ## 3. Log
