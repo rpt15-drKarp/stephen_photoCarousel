@@ -1,8 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Images = require('../database/Image.js');
+const db = require('../database/Image.js');
 const cors = require('cors');
 const compression = require('compression');
+const dbMySQL = require('../database/mysql/index.js');
 
 const app = express();
 
@@ -70,6 +72,21 @@ app.get('*.js', (req, res, next) => {
   req.url = req.url + '.gz';
   res.set('Content-Encoding', 'gzip');
   next();
+});
+
+// POST endpoint
+app.post('/api/images/:gameId', (req, res) => {
+  db.save(req.params.gameId, req.body);
+});
+
+// PUT endpoint
+app.put('/api/images/:gameId', (req, res) => {
+  db.update(req.params.gameId, req.body);
+});
+
+// DELETE endpoint
+app.delete('/api/images/:gameId', (req, res) => {
+  db.deleteData(req.params.gameId);
 });
 
 const port = 3002;
