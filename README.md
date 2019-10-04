@@ -122,11 +122,69 @@ CREATE TABLE IF NOT EXISTS images (
 By including -p, it'll prompt **Enter Password**. Enter your password and it'll direct you to the mySQL shell.
 
 ### 2.2 Cassandra Setup
+#### Install HomeBrew
+`brew install cassandra`
+
+#### Install Python
+`brew install python`
+
+#### Install Java
+`brew cask install java`
+
+#### Install cql
+`pip install cql`
+`pip install cassandra-driver`
+Installing cassandra-driver will take a few minutes so if it doesn't install immediately, just wait!
+
+If you run into "pip: command not found", then run:
+`sudo easy_install pip`
+
+If you run into "ERROR: Cannot uninstall 'six'", then run:
+`sudo pip install tld --ignore-installed six`
+
+#### Start/Stop Cassandra
+`brew services start cassandra`
+`brew services stop cassandra`
+
+#### Cassandra shell
+You get into cassandra shell by running `cqlsh`
+
+#### Set up new keyspace and data object in shell
+A keyspace in Cassandra is like a database in other RDMS.
+I ran:
+`CREATE KEYSPACE photo_carousel WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '3'};`
+
+I created a UDT (user defined type) to house the 10 images for each game.
+```
+CREATE TYPE photo_carousel.images_all (
+  image1 text,
+  image2 text,
+  image3 text,
+  image4 text,
+  image5 text,
+  image6 text,
+  image7 text,
+  image8 text,
+  image9 text,
+  image10 text
+);
+```
+Then create the table.
+```
+CREATE TABLE photo_carousel.games (
+  game_id int PRIMARY KEY,
+  game_name text,
+  images FROZEN<images_all>
+);
+```
+
+#### Connect node to Cassandra database
+
+#### Queries to use with Cassandra
 
 ### 2.3 React Build Setup
 
 ## 3. Log
-
 ### 3.1 Set Up CRUD Endpoints
  - `GET /api/images/:gameId`
    - returns all images that are relevant to a specific game
@@ -195,3 +253,6 @@ try {
 ```
 
 ### 3.3.2 Cassandra Setup
+### Hurdles!
+#### CQLSH Connection Error ('Unable to connect to any servers')
+Make sure that you start cassandra with `launchctl start homebrew.mxcl.cassandra` before you try to use cqlsh. Otherwise you will receive the above error
