@@ -13,7 +13,7 @@
 ## Table of Contents
 
 1. [Usage](#Usage)
-   - [1.1 API Endpoints](#11-api-end-points)
+   - [1.1 CRUD Endpoints](#11-crud-endpoints)
 2. [Development Setup](#development-setup)
    - [2.1 MySQL Setup](#21-mysql-setup)
    - [2.2 Cassandra Setup](#22-cassandra-setup)
@@ -31,7 +31,7 @@ This service is part of a game page on the Steam website.
 
 This service is the photo carousel component of the page which will give the users the ability to scroll through different screenshots from the game.
 
-### 1.1 API End Points
+### 1.1 CRUD Endpoints
  - `GET /api/images/:gameId`
    - returns all images that are relevant to a specific game
  - `POST /api/images/:gameId`
@@ -121,12 +121,6 @@ CREATE TABLE IF NOT EXISTS images (
 `mysql -u USERNAME -p`
 By including -p, it'll prompt **Enter Password**. Enter your password and it'll direct you to the mySQL shell.
 
-
-
-#### How to upload mysql schema from file:
-
-
-
 ### 2.2 Cassandra Setup
 
 ### 2.3 React Build Setup
@@ -174,5 +168,30 @@ I also increased the speed of the inserts by using extended insert (i.e. INSERT 
 
 The issue I continue having even when using async/await is that the await is not resolving. The await is also stopping my for loop.
 
-### 3.3.2 Cassandra Setup
+**ANSWER!**
+The reason that my await function wasn't resolving is because I left an error handling function in the argument
 
+So previous code was:
+```
+await db.pool.query(queryString, queryArgs, (err, result) => {
+  if (err) {
+    console.log('error in insert query', err);
+  } else {
+    console.log('success!');
+  }
+})
+```
+
+But I changed it to:
+`await db.pool.query(queryString, queryArgs)`
+
+I also had to include try/catch so the final code looked something like:
+```
+try {
+  await db.pool.query(queryString, queryArgs);
+} catch (error) {
+  console.log('error in catch:', error);
+}
+```
+
+### 3.3.2 Cassandra Setup
