@@ -1,22 +1,36 @@
 const mysql = require('mysql');
-const connection = mysql.createConnection({
+const util = require('util');
+
+const pool = mysql.createPool({
   host     : 'localhost',
   user     : 'root',
   password : 'password',
   database: 'photoCarousel'
 });
 
-connection.connect(function(err) {
+pool.getConnection((err, connection) => {
   if (err) {
-    console.error('error connecting: ' + err.stack);
-    return;
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+      console.error('Database connection was closed.')
+    }
+    if (err.code === 'ER_CON_COUNT_ERROR') {
+      console.error('Database has too many connections.')
+    }
+    if (err.code === 'ECONNREFUSED') {
+      console.error('Database connection was refused.')
+    }
   }
 
-  console.log('connected as id ' + connection.threadId);
+  if (connection) connection.release()
+  return
 });
 
-connection.query('SET GLOBAL connect_timeout=28800');
-connection.query('SET GLOBAL wait_timeout=28800');
-connection.query('SET GLOBAL interactive_timeout=28800');
 
-module.exports.connection = connection;
+pool.query('SET GLOBAL connect_timeout=28800');
+pool.query('SET GLOBAL wait_timeout=28800');
+pool.query('SET GLOBAL interactive_timeout=28800');
+
+pool.query = util.promisify(pool.query);
+
+
+module.exports.pool = pool;

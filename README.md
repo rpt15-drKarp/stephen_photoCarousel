@@ -168,8 +168,11 @@ I used the following query to make sure the rows were successfully added to my d
 
 **Second Issue**
 I received this error:
-> error connecting: Error: connect ETIMEDOUT
-    at Connection._handleConnectTimeout
+> error connecting: Error: connect ETIMEDOU at Connection._handleConnectTimeout
+
+I also increased the speed of the inserts by using extended insert (i.e. INSERT INTO user (id, name) VALUES (1, 'Ben'), (2, 'Bob');)
+
+The issue I continue having even when using async/await is that the await is not resolving. The await is also stopping my for loop.
 
 ### 3.3.2 Cassandra Setup
 
