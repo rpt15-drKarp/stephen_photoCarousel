@@ -24,12 +24,13 @@
    - [3.3 Development Setup](#33-development-setup)
      - [3.3.1 MySQL Setup](#331-mysql-setup)
      - [3.3.2 Cassandra Setup](#332-cassandra-setup)
+   - [3.4 New Relic Setup](#34-new-relic-setup)
 
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
 
-This service is the photo carousel component of the page which will give the users the ability to scroll through different screenshots from the game.
+This service is the photo carousel component of the page that was inherited from a differnet student which will give the users the ability to scroll through different screenshots from the game.
 
 ### 1.1 CRUD Endpoints
  - `GET /api/images/:gameId`
@@ -253,6 +254,14 @@ try {
 ```
 
 ### 3.3.2 Cassandra Setup
-### Hurdles!
-#### CQLSH Connection Error ('Unable to connect to any servers')
-Make sure that you start cassandra with `launchctl start homebrew.mxcl.cassandra` before you try to use cqlsh. Otherwise you will receive the above error
+**Errors**
+- #### CQLSH Connection Error ('Unable to connect to any servers')
+  - Make sure that you start cassandra with `brew services start cassandra` before you try to use cqlsh. Otherwise you will receive the above error
+- #### Error: Not enough bytes to read value of component
+  - I was initially using a stringified version of my object to pass into the images column but it should've been a plain object.
+- #### Error: Target data type could not be guessed
+  - I received this error and most of my research was showing that if I use a prepare statement as one of the options in my .execute function, it should solve it. The problem turned out to be that I put "prepared" instead of "prepare".
+- #### ReadTimeout: Error from server: code=1200 when using SELECT COUNT(*) FROM photo_carousel.games in cqlsh
+Counting the number of records in Cassandra is a heavy operation due to its distributed nature. So this is expected unless you make some dits to the connection timeout times.
+
+### 3.4 New Relic Setup
