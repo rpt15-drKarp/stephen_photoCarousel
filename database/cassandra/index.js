@@ -1,10 +1,12 @@
 const cassandra = require('cassandra-driver');
-const executeConcurrent = cassandra.concurrent.executeConcurrent
 
 const client = new cassandra.Client({
   contactPoints: ['127.0.0.1:9042'],
   localDataCenter: 'datacenter1',
-  keyspace: 'photo_carousel'
+  keyspace: 'photo_carousel',
+  pooling: {
+    maxRequestsPerConnection: 32768
+  }
 });
 
 client.connect(function (err) {
@@ -14,6 +16,9 @@ client.connect(function (err) {
     console.log('connected to cassandra');
   }
 });
+
+const executeConcurrent = cassandra.concurrent.executeConcurrent;
+
 
 // const query = 'INSERT INTO games (game_id, game_name, images) VALUES (?, ?, ?)';
 // const params = [4, 'test',     {image1: 'http://lorempixel.com/600/337/animals/image1',
@@ -37,3 +42,4 @@ client.connect(function (err) {
 // });
 
 module.exports.client = client;
+module.exports.executeConcurrent = executeConcurrent;

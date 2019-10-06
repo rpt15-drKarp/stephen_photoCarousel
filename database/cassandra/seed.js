@@ -2,6 +2,7 @@ const db = require('./index.js');
 const faker = require('faker');
 
 const seedData = async (numOfData) => {
+  console.log('start time', new Date().toLocaleTimeString());
   let globalCounter = 0;
 
   const queryString = `INSERT INTO games (game_id, game_name, images) VALUES (?, ?, ?)`;
@@ -11,7 +12,7 @@ const seedData = async (numOfData) => {
     while (globalCounter < 100) {
       for (let i = 0; i < numOfData; i++) {
         // create values for extended inserts
-        queryArgs.push((i + 1).toString());
+        queryArgs.push(i + 1);
         // create game name
         queryArgs.push(faker.lorem.word());
         let imageObj = {};
@@ -30,6 +31,7 @@ const seedData = async (numOfData) => {
         queryArgs.push(imageObj);
         try {
             await db.client.execute(queryString, queryArgs, { prepare: true })
+            // await db.executeConcurrent(db.client, queryString, queryArgs, { prepare: true })
             .then (() => {
               globalCounter++;
               queryArgs = [];
@@ -46,8 +48,10 @@ const seedData = async (numOfData) => {
     }
   }
   console.log('global counter:', globalCounter);
+  console.log('end time', new Date().toLocaleTimeString());
   return process.exit();
 };
 
-seedData(10000000);
+seedData(100);
+// console.log(db);
     // console.log('node memory:', process.memoryUsage().heapUsed)
