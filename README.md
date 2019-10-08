@@ -262,6 +262,13 @@ try {
 - #### Error: Target data type could not be guessed
   - I received this error and most of my research was showing that if I use a prepare statement as one of the options in my .execute function, it should solve it. The problem turned out to be that I put "prepared" instead of "prepare".
 - #### ReadTimeout: Error from server: code=1200 when using SELECT COUNT(*) FROM photo_carousel.games in cqlsh
-Counting the number of records in Cassandra is a heavy operation due to its distributed nature. So this is expected unless you make some dits to the connection timeout times.
+  - Counting the number of records in Cassandra is a heavy operation due to its distributed nature. So this is expected unless you make some dits to the connection timeout times.
+- #### Parameter "game_id" not defined when trying to use executeConcurrent
+  - I used the same query string and query parameters as I was using when doing the single queries but those arguments were not working in executeConcurrent.
+
+***Useful queries***
+Drop
+count
+
 
 ### 3.4 New Relic Setup
