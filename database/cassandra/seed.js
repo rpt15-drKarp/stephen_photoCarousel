@@ -14,10 +14,10 @@ const seedData = async (numOfData) => {
       queryArgs = [];
 
       for (let x = 1; x < 11; x++) {
-        let gameId = i + 1;
+        let gameId = ++globalCounter;
         let tempArr = [];
         // create values for extended inserts
-        tempArr.push(gameId++);
+        tempArr.push(gameId);
         // create game name
         tempArr.push(faker.lorem.word());
         let imageObj = {};
@@ -30,7 +30,7 @@ const seedData = async (numOfData) => {
 
           imageCounter++;
           let key = 'image' + i;
-          imageObj[key] = `http://lorempixel.com/600/337/animals/${key}`;
+          imageObj[key] = `http://lorempixel.com/600/337/animals/${imageCounter}`;
         }
         tempArr.push(imageObj);
         queryArgs.push(tempArr);
@@ -54,7 +54,6 @@ const seedData = async (numOfData) => {
         // await db.client.execute(queryString, queryArgs, { prepare: true })
         // await db.executeConcurrent(db.client, queryString, queryArgs, { prepare: true, concurrencyLevel: 10000 })
         .then (() => {
-          globalCounter += 10;
           // console.log('globalCounter', globalCounter);
           // console.log('success');
         })

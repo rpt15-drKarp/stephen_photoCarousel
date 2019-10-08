@@ -3,6 +3,7 @@ const faker = require('faker');
 
 const seedData = async (numOfData) => {
   let globalCounter = 0;
+  let imageCounter = 0;
 
   const queryString = `INSERT INTO games (game_name, images) VALUES
     (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?),
@@ -22,7 +23,7 @@ const seedData = async (numOfData) => {
       // create 10 images and add to object
       for (let i = 1; i < 11; i++) {
         let key = 'image' + i;
-        imageObj[key] = `http://lorempixel.com/600/337/animals/${key}`;
+        imageObj[key] = `http://lorempixel.com/600/337/animals/${imageCounter}`;
       }
       queryArgs.push(JSON.stringify(imageObj));
       // globalCounter++;
