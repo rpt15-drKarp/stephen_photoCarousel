@@ -25,7 +25,7 @@
      - [3.3.1 MySQL Setup](#331-mysql-setup)
      - [3.3.2 Cassandra Setup](#332-cassandra-setup)
    - [3.4 New Relic Setup](#34-new-relic-setup)
-
+   - [3.5 DBMS Benchmarking](#35-dbms-benchmarking)
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
@@ -266,9 +266,14 @@ try {
 - #### Parameter "game_id" not defined when trying to use executeConcurrent
   - I used the same query string and query parameters as I was using when doing the single queries but those arguments were not working in executeConcurrent.
 
-***Useful queries***
-Drop
-count
-
-
 ### 3.4 New Relic Setup
+
+### 3.5 DMBS Benchmarking
+#### MySQL
+
+#### Cassandra
+I initially set up my insert queries for Cassandra using concurrent execution because I thought that simultaneously running the insert queries will make the query faster. But I realized that wasn't the case (or I set it up wrong).
+Insert volume | Concurrent Execution | Batch Inserts |
+------------- | -------------------- | ------------- |
+500,000       | 9 minutes | 1 minute 14 seconds  |
+10,000,000    | 1 hour 20 minutes | 14 minutes 50 seconds |

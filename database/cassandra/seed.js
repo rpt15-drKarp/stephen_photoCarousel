@@ -1,7 +1,7 @@
 const db = require('./index.js');
 const faker = require('faker');
 
-const seedData = async (numOfData) => {
+const seedData = async (batch, total) => {
   console.log('start time', new Date().toLocaleTimeString());
   let globalCounter = 0;
   let imageCounter = 0;
@@ -9,8 +9,8 @@ const seedData = async (numOfData) => {
   const queryString = `INSERT INTO games (game_id, game_name, images) VALUES (?, ?, ?)`;
   let queryArgs = [];
 
-  while (globalCounter < 10000000) {
-    for (let i = 0; i < numOfData; i += 10) {
+  while (globalCounter < total) {
+    for (let i = 0; i < batch; i += 10) {
       queryArgs = [];
 
       for (let x = 1; x < 11; x++) {
@@ -70,6 +70,6 @@ const seedData = async (numOfData) => {
   return process.exit();
 };
 
-seedData(1000);
+seedData(1000, 500000);
 // console.log(db);
     // console.log('node memory:', process.memoryUsage().heapUsed)
