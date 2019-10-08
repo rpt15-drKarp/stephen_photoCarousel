@@ -15,13 +15,13 @@ module.exports = {
       });
     },
     postOne: (game) => {
-      let queryString = 'INSERT INTO games (game_name, images) VALUES ()';
+      let queryString = 'INSERT INTO games (game_name, images) VALUES (?, ?)';
 
       db.pool.query(queryString, game, () => {
         if (err) {
           throw err;
         } else {
-          console.log('saved one to cassandra db');
+          console.log('saved one to mysql db');
         }
       })
     },
@@ -43,9 +43,9 @@ module.exports = {
       });
     },
     delete: (gameId) => {
-      let queryString = 'SELECT * FROM games';
+      let queryString = 'DELETE FROM games WHERE game_id = ?';
 
-      db.pool.query(queryString, function(err, results) {
+      db.pool.query(queryString, gameId, function(err, results) {
         if (err) {
           throw err;
         } else {
