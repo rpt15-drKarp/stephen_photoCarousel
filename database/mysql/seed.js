@@ -28,20 +28,19 @@ const seedData = async (numOfData) => {
       // globalCounter++;
     }
 
-    // while (globalCounter < 10000000) {
-      try {
-          await db.pool.query(queryString, queryArgs)
-          .then (() => {
-            globalCounter += 50;
-            // console.log('globalCounter', globalCounter);
-            // console.log('success');
-          })
-          .catch ((err) => {
-            console.log('error in catch await:', err);
-          });
-        } catch (error) {
-          console.log('error in catch:', error);
-        }
+    try {
+        await db.pool.query(queryString, queryArgs)
+        .then (() => {
+          globalCounter += 50;
+          // console.log('globalCounter', globalCounter);
+          // console.log('success');
+        })
+        .catch ((err) => {
+          console.log('error in catch await:', err);
+        });
+      } catch (error) {
+        console.log('error in catch:', error);
+      }
     }
   }
   console.log('global counter:', globalCounter);

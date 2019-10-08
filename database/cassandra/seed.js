@@ -4,40 +4,57 @@ const faker = require('faker');
 const seedData = async (numOfData) => {
   console.log('start time', new Date().toLocaleTimeString());
   let globalCounter = 0;
+  let imageCounter = 0;
 
   const queryString = `INSERT INTO games (game_id, game_name, images) VALUES (?, ?, ?)`;
   let queryArgs = [];
-  const concurrencyLevel = 1000;
 
-  for (let i = 0; i < numOfData; i++) {
-    while (globalCounter < 5000) {
+  while (globalCounter < 10000000) {
+    for (let i = 0; i < numOfData; i += 10) {
+      queryArgs = [];
+
+      for (let x = 1; x < 11; x++) {
+        let gameId = i + 1;
         let tempArr = [];
         // create values for extended inserts
-        tempArr.push(i + 1);
+        tempArr.push(gameId++);
         // create game name
         tempArr.push(faker.lorem.word());
         let imageObj = {};
         // use this counter to make 1000 images
-        let imageCounter = 0;
         // create 10 images and add to object
-        for (let i = 1; i < 11; i++) {
+        for (let i = 0; i < 10; i++) {
           if (imageCounter === 1000) {
             imageCounter = 0;
           }
 
           imageCounter++;
-          let key = 'image' + imageCounter;
+          let key = 'image' + i;
           imageObj[key] = `http://lorempixel.com/600/337/animals/${key}`;
         }
         tempArr.push(imageObj);
         queryArgs.push(tempArr);
+      }
+
+      let queries = [
+        { query: queryString, params: queryArgs[0]},
+        { query: queryString, params: queryArgs[1]},
+        { query: queryString, params: queryArgs[2]},
+        { query: queryString, params: queryArgs[3]},
+        { query: queryString, params: queryArgs[4]},
+        { query: queryString, params: queryArgs[5]},
+        { query: queryString, params: queryArgs[6]},
+        { query: queryString, params: queryArgs[7]},
+        { query: queryString, params: queryArgs[8]},
+        { query: queryString, params: queryArgs[9]},
+      ];
 
       try {
+        await db.client.batch(queries, { prepare: true })
         // await db.client.execute(queryString, queryArgs, { prepare: true })
-        await db.executeConcurrent(db.client, queryString, queryArgs, { prepare: true })
+        // await db.executeConcurrent(db.client, queryString, queryArgs, { prepare: true, concurrencyLevel: 10000 })
         .then (() => {
-          globalCounter++;
-          queryArgs = [];
+          globalCounter += 10;
           // console.log('globalCounter', globalCounter);
           // console.log('success');
         })
@@ -54,6 +71,6 @@ const seedData = async (numOfData) => {
   return process.exit();
 };
 
-seedData(5000);
+seedData(1000);
 // console.log(db);
     // console.log('node memory:', process.memoryUsage().heapUsed)
