@@ -79,23 +79,25 @@ app.get('*.js', (req, res, next) => {
 
 // GET all endpoint
 app.get('/api/images', (req, res) => {
-  console.log('results from GET in server:', dbApis.get());
-  // res.send(dbApis.get());
+  console.log('results from GET in server:', dbApis.getAll());
+  // res.send(dbApis.getAll());
 });
 
-// POST endpoints
-app.post('/api/images/:gameId', (req, res) => {
-  db.save(req.params.gameId, req.body);
+// POST One endpoints
+app.post('/api/images', (req, res) => {
+  dbApis.postOne(req.body);
 });
 
 // PUT endpoint
-app.put('/api/images/:gameId', (req, res) => {
-  db.update(req.params.gameId, req.body);
+app.put('/api/images', (req, res) => {
+  // arguments must be gameId,column name, and update value
+  // need to get it from req.body maybe?
+  dbApis.put(gameId, colName, val);
 });
 
 // DELETE endpoint
 app.delete('/api/images/:gameId', (req, res) => {
-  db.deleteData(req.params.gameId);
+  dbApis.delete(gameId);
 });
 
 const port = 3002;
