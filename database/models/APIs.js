@@ -1,7 +1,7 @@
 const dbM = require('../mysql/index.js');
 const dbC = require('../cassandra/index.js');
 
-let envDb = process.env.db;
+let envDb = process.env.DB;
 
 module.exports = {
   getOne: (gameId, callback) => {
@@ -38,7 +38,7 @@ module.exports = {
         throw err;
       } else {
         console.log('RESULTS --->', results);
-        callback(null, results);
+        callback(results);
       }
     });
     } else if (envDb === 'cassandra') {
@@ -48,8 +48,8 @@ module.exports = {
         if (err) {
           throw err;
         } else {
-          console.log('RESULTS --->', results);
-          callback(null, results);
+          console.log('RESULTS --->', results.rows);
+          callback(results.rows);
         }
       });
     }

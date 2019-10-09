@@ -9,6 +9,9 @@ const dbApis = require('../database/models/APIs.js');
 
 const app = express();
 
+let envDb = process.env.DB;
+console.log('db being used:', envDb);
+
 app.use('/', express.static(__dirname + '/../client/dist'));
 app.use('/:gameId', express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -67,7 +70,9 @@ app.get('/api/images/:gameId/', (req, res) => {
       }
     });
   } else {
-    dbApis.getOne();
+    res.send(dbApis.getOne((result) => {
+      res.send(result);
+    }));
   }
 });
 
@@ -79,8 +84,10 @@ app.get('*.js', (req, res, next) => {
 
 // GET all endpoint
 app.get('/api/images', (req, res) => {
-  console.log('results from GET in server:', dbApis.getAll());
-  // res.send(dbApis.getAll());
+  // console.log('results from GET in server:', dbApis.getAll());
+  dbApis.getAll((results) => {
+    res.send(results);
+  });
 });
 
 // POST One endpoints

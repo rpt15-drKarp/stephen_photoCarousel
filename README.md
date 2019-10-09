@@ -273,6 +273,34 @@ In order to start load testing each database, I created separate files to house 
 
 I also created an environmental variable for the database so that depending on which script I use to start my service, it'll know which database to use.
 
+#### k6 Setup
+```
+brew tap loadimpact/k6
+brew install k6
+```
+
+You don't have to npm install any packages.
+
+Create a new js file which looks like this in its most basic form:
+```
+// /testing/loadTests.js
+
+import http from "k6/http";
+import { check, sleep } from "k6";
+export let options = {
+  vus: 10,
+  duration: "10s"
+};
+export default function() {
+  let res = http.get("http://localhost:3002/api/images");
+  check(res, {
+    "success": (r) => r.status == 200
+  });
+};
+```
+
+Once you update the above script, run 'k6 run loadTests.js' <- If you're not in the correct folder, make sure to adjust this.
+
 #### MySQL
 
 #### Cassandra
