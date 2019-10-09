@@ -269,6 +269,10 @@ try {
 ### 3.4 New Relic Setup
 
 ### 3.5 DMBS Benchmarking
+In order to start load testing each database, I created separate files to house the different queries that will be required for each database.
+
+I also created an environmental variable for the database so that depending on which script I use to start my service, it'll know which database to use.
+
 #### MySQL
 
 #### Cassandra

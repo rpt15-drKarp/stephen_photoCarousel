@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "PhotoCarousel",
   "version": "",
   "description": "",
   "author": "",
@@ -8,7 +8,9 @@
     "node": ">=6.13.0"
   },
   "scripts": {
-    "start": "nodemon server/index.js",
+    "startMongo": "DB='mongo' nodemon server/index.js",
+    "startMySql": "DB='mySql' nodemon server/index.js",
+    "startCassandra": "DB='cassandra' nodemon server/index.js",
     "db:setup": "node database/seed.js",
     "mysql:setup": "node database/mysql/seed.js",
     "cassandra:setup": "node database/cassandra/seed.js",
