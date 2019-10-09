@@ -7,7 +7,7 @@ export let options = {
 };
 
 export default function() {
-  let res = http.get('http://localhost.com:3000/api/overview');
+  let res = http.get('http://localhost:3000/api/images');
   check(res, {
     'success': (r) => r.status == 200
   });
