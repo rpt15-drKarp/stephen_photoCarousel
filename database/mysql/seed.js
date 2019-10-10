@@ -2,6 +2,8 @@ const db = require('./index.js');
 const faker = require('faker');
 
 const seedData = async (numOfData) => {
+  console.log('start time', new Date().toLocaleTimeString());
+
   let globalCounter = 0;
   let imageCounter = 0;
 
@@ -33,7 +35,7 @@ const seedData = async (numOfData) => {
         await db.pool.query(queryString, queryArgs)
         .then (() => {
           globalCounter += 50;
-          // console.log('globalCounter', globalCounter);
+          console.log('globalCounter', globalCounter);
           // console.log('success');
         })
         .catch ((err) => {
@@ -45,8 +47,10 @@ const seedData = async (numOfData) => {
     }
   }
   console.log('global counter:', globalCounter);
+  console.log('end time', new Date().toLocaleTimeString());
   return process.exit();
 };
 
 seedData(20000);
     // console.log('node memory:', process.memoryUsage().heapUsed)
+//

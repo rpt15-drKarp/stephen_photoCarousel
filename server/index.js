@@ -6,6 +6,7 @@ const db = require('../database/Image.js');
 const cors = require('cors');
 const compression = require('compression');
 const dbApis = require('../database/models/APIs.js');
+// const seedCassandra = require('../database/cassandra/seed.js');
 
 const app = express();
 
@@ -70,9 +71,10 @@ app.get('/api/images/:gameId/', (req, res) => {
       }
     });
   } else {
-    res.send(dbApis.getOne((result) => {
+    dbApis.getOne(gameId, (result) => {
+      console.log('successfully got game data', result);
       res.send(result);
-    }));
+    });
   }
 });
 
@@ -84,15 +86,18 @@ app.get('*.js', (req, res, next) => {
 
 // GET all endpoint
 app.get('/api/images', (req, res) => {
-  // console.log('results from GET in server:', dbApis.getAll());
   dbApis.getAll((results) => {
     res.send(results);
   });
 });
 
-// POST One endpoints
-app.post('/api/images', (req, res) => {
-  dbApis.postOne(req.body);
+// POST endpoints
+app.post('/api/images/seedTenMillion', (req, res) => {
+  // if (envDb === 'cassandra') {
+  //   res.send('okay');
+  //   seedCassandra.seedData(1000,10000000);
+  // }
+  // dbApis.post(req.body);
 });
 
 // PUT endpoint

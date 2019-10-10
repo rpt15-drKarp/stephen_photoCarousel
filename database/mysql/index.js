@@ -19,6 +19,8 @@ pool.getConnection((err, connection) => {
     if (err.code === 'ECONNREFUSED') {
       console.error('MySQL database connection was refused.')
     }
+  } else {
+    console.log('connected to mySQL')
   }
 
   if (connection) connection.release()

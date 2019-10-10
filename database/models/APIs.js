@@ -23,32 +23,32 @@ module.exports = {
         if (err) {
           throw err;
         } else {
-          console.log('RESULTS --->', results);
-          callback(null, results);
+          // console.log('RESULTS --->', results.rows);
+          callback(results.rows);
         }
       });
     }
   },
   getAll: (callback) => {
     if (envDb === 'mySql') {
-    let queryString = 'SELECT * FROM games';
+    let queryString = 'SELECT * FROM games LIMIT 100';
 
     dbM.pool.query(queryString, function(err, results) {
       if (err) {
         throw err;
       } else {
-        console.log('RESULTS --->', results);
+        // console.log('RESULTS --->', results);
         callback(results);
       }
     });
     } else if (envDb === 'cassandra') {
-      let queryString = 'SELECT * FROM photo_carousel.games';
+      let queryString = 'SELECT * FROM photo_carousel.games LIMIT 100';
 
       dbC.client.execute(queryString, function(err, results) {
         if (err) {
           throw err;
         } else {
-          console.log('RESULTS --->', results.rows);
+          // console.log('RESULTS --->', results.rows);
           callback(results.rows);
         }
       });

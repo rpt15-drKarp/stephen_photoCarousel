@@ -3,11 +3,13 @@ import { check, sleep } from 'k6';
 
 export let options = {
   vus: 10,
-  duration: '10s'
+  duration: '1m30s',
+  rps: 1
 };
 
 export default function() {
-  let res = http.get('http://localhost:3002/api/images/1');
+  let randomNum = Math.floor(Math.random() * (10000000 - 9000000 + 1) + 9000000);
+  let res = http.get(`http://localhost:3002/api/images/${randomNum}`);
   check(res, {
     'success': (r) => r.status == 200
   });
