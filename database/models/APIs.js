@@ -12,7 +12,7 @@ module.exports = {
         if (err) {
           throw err;
         } else {
-          console.log('RESULTS --->', results);
+          // console.log('RESULTS --->', results);
           callback(null, results);
         }
       });

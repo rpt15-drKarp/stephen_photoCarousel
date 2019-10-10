@@ -15,7 +15,7 @@ const seedData = async (numOfData) => {
     (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?), (?, ?)`;
 
   let queryArgs = [];
-  while (globalCounter < 10000000) {
+  // while (globalCounter < 10000000) {
     for (let i = 0; i < numOfData; i++) {
     // create values for extended inserts
     for (let x = 0; x < 50; x++) {
@@ -24,18 +24,23 @@ const seedData = async (numOfData) => {
       let imageObj = {};
       // create 10 images and add to object
       for (let i = 1; i < 11; i++) {
+        if (imageCounter === 1000) {
+          imageCounter = 0;
+        }
+
+        ++imageCounter;
         let key = 'image' + i;
         imageObj[key] = `http://lorempixel.com/600/337/animals/${imageCounter}`;
       }
       queryArgs.push(JSON.stringify(imageObj));
       // globalCounter++;
     }
-
+  while (globalCounter < 10000000) {
     try {
         await db.pool.query(queryString, queryArgs)
         .then (() => {
           globalCounter += 50;
-          console.log('globalCounter', globalCounter);
+          // console.log('globalCounter', globalCounter);
           // console.log('success');
         })
         .catch ((err) => {
@@ -45,12 +50,13 @@ const seedData = async (numOfData) => {
         console.log('error in catch:', error);
       }
     }
-  }
+    }
+  // }
   console.log('global counter:', globalCounter);
   console.log('end time', new Date().toLocaleTimeString());
   return process.exit();
 };
 
-seedData(20000);
+seedData(2000);
     // console.log('node memory:', process.memoryUsage().heapUsed)
 //

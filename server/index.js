@@ -72,7 +72,7 @@ app.get('/api/images/:gameId/', (req, res) => {
     });
   } else {
     dbApis.getOne(gameId, (result) => {
-      console.log('successfully got game data', result);
+      // console.log('successfully got game data', result);
       res.send(result);
     });
   }

@@ -308,12 +308,12 @@ export default function() {
 
 Once you update the above script, run 'k6 run loadTests.js' <- If you're not in the correct folder, make sure to adjust this.
 
-DBMS      | Route | RPS | LATENCY | ERROR RATE |
---------- | ----- | ----- | ----- |
-Cassandra | GET | 1    |  |  |
-Cassandra | GET | 10   |  |  |
-Cassandra | GET | 100  |  |  |
-Cassandra | GET | 1000 |  |  |
+DBMS      | Route | RPS | LATENCY | THROUGHPUT | ERROR RATE |
+--------- | ---- | ----- | ----- |
+Cassandra | GET | 1    | 4.03ms | 41.9rpm | 0.00% |
+Cassandra | GET | 10   | 4.79ms | 498rpm | 0.00% |
+Cassandra | GET | 100  | ? | ? | 0.00% |
+Cassandra | GET | 1000 | 24.2ms | 12,700rpm | 0.00% |
 Cassandra | POST | 1    |  |  |
 Cassandra | POST | 10   |  |  |
 Cassandra | POST | 100  |  |  |
