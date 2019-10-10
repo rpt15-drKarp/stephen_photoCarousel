@@ -23,12 +23,12 @@ const seedData = async (batch, total) => {
         let imageObj = {};
         // use this counter to make 1000 images
         // create 10 images and add to object
-        for (let i = 0; i < 10; i++) {
+        for (let i = 1; i < 11; i++) {
           if (imageCounter === 1000) {
             imageCounter = 0;
           }
 
-          imageCounter++;
+          ++imageCounter;
           let key = 'image' + i;
           imageObj[key] = `http://lorempixel.com/600/337/animals/${imageCounter}`;
         }
@@ -70,6 +70,8 @@ const seedData = async (batch, total) => {
   return process.exit();
 };
 
-seedData(1000, 500000);
+seedData(1000, 10000000);
 // console.log(db);
     // console.log('node memory:', process.memoryUsage().heapUsed)
+
+module.exports.seedData = seedData;

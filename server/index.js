@@ -1,13 +1,17 @@
-const rewrelice = require('newrelic');
+const rewrelic = require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
 const Images = require('../database/Image.js');
 const db = require('../database/Image.js');
 const cors = require('cors');
 const compression = require('compression');
-const dbMySQL = require('../database/mysql/index.js');
+const dbApis = require('../database/models/APIs.js');
+// const seedCassandra = require('../database/cassandra/seed.js');
 
 const app = express();
+
+let envDb = process.env.DB;
+console.log('db being used:', envDb);
 
 app.use('/', express.static(__dirname + '/../client/dist'));
 app.use('/:gameId', express.static(__dirname + '/../client/dist'));
@@ -15,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(compression());
+
 
 // Josh's endpoint
 app.get('/api/aboutImage/:gameId', (req, res) => {
@@ -55,6 +60,8 @@ app.get('/api/overviewImage/:gameId', (req, res) => {
 app.get('/api/images/:gameId/', (req, res) => {
   const game_name = req.params.game_name;
   const gameId = req.params.gameId;
+
+  if (envDb === 'mongo') {
     Images.find({}).where('gameId').gt(2).lt(18).sort({ gameId: 1}).exec((err, results) => {
       if (err) {
         console.error(err);
@@ -63,10 +70,12 @@ app.get('/api/images/:gameId/', (req, res) => {
         res.json(results);
       }
     });
-  // switch code to something like this but need to make it work with the way that he's retrieving data and sending it back
-  // Images.retrieve(req.params.gameId, (gameInfo) => {
-  //   res.send(gameInfo);
-  // });
+  } else {
+    dbApis.getOne(gameId, (result) => {
+      // console.log('successfully got game data', result);
+      res.send(result);
+    });
+  }
 });
 
 app.get('*.js', (req, res, next) => {
@@ -75,19 +84,32 @@ app.get('*.js', (req, res, next) => {
   next();
 });
 
-// POST endpoint
-app.post('/api/images/:gameId', (req, res) => {
-  db.save(req.params.gameId, req.body);
+// GET all endpoint
+app.get('/api/images', (req, res) => {
+  dbApis.getAll((results) => {
+    res.send(results);
+  });
+});
+
+// POST endpoints
+app.post('/api/images/seedTenMillion', (req, res) => {
+  // if (envDb === 'cassandra') {
+  //   res.send('okay');
+  //   seedCassandra.seedData(1000,10000000);
+  // }
+  // dbApis.post(req.body);
 });
 
 // PUT endpoint
-app.put('/api/images/:gameId', (req, res) => {
-  db.update(req.params.gameId, req.body);
+app.put('/api/images', (req, res) => {
+  // arguments must be gameId,column name, and update value
+  // need to get it from req.body maybe?
+  dbApis.put(gameId, colName, val);
 });
 
 // DELETE endpoint
 app.delete('/api/images/:gameId', (req, res) => {
-  db.deleteData(req.params.gameId);
+  dbApis.delete(gameId);
 });
 
 const port = 3002;

@@ -266,14 +266,66 @@ try {
 - #### Parameter "game_id" not defined when trying to use executeConcurrent
   - I used the same query string and query parameters as I was using when doing the single queries but those arguments were not working in executeConcurrent.
 
-### 3.4 New Relic Setup
-
-### 3.5 DMBS Benchmarking
-#### MySQL
-
-#### Cassandra
+#### Cassandra query setup
 I initially set up my insert queries for Cassandra using concurrent execution because I thought that simultaneously running the insert queries will make the query faster. But I realized that wasn't the case (or I set it up wrong).
 Insert volume | Concurrent Execution | Batch Inserts |
 ------------- | -------------------- | ------------- |
 500,000       | 9 minutes | 1 minute 14 seconds  |
 10,000,000    | 1 hour 20 minutes | 14 minutes 50 seconds |
+
+### 3.4 New Relic Setup
+
+### 3.5 DMBS Benchmarking
+In order to start load testing each database, I created separate files to house the different queries that will be required for each database.
+
+I also created an environmental variable for the database so that depending on which script I use to start my service, it'll know which database to use.
+
+#### k6 Setup
+```
+brew tap loadimpact/k6
+brew install k6
+```
+
+You don't have to npm install any packages.
+
+Create a new js file which looks like this in its most basic form:
+```
+// testing/loadTests.js
+
+import http from "k6/http";
+import { check, sleep } from "k6";
+export let options = {
+  vus: 10,
+  duration: "10s"
+};
+export default function() {
+  let res = http.get("http://localhost:3002/api/images");
+  check(res, {
+    "success": (r) => r.status == 200
+  });
+};
+```
+
+Once you update the above script, run 'k6 run loadTests.js' <- If you're not in the correct folder, make sure to adjust this.
+
+DBMS      | Route | RPS | LATENCY | THROUGHPUT | ERROR RATE |
+--------- | ---- | ----- | ----- |
+Cassandra | GET | 1    | 4.03ms | 41.9rpm | 0.00% |
+Cassandra | GET | 10   | 4.79ms | 498rpm | 0.00% |
+Cassandra | GET | 100  | ? | ? | 0.00% |
+Cassandra | GET | 1000 | 24.2ms | 12,700rpm | 0.00% |
+Cassandra | POST | 1    |  |  |
+Cassandra | POST | 10   |  |  |
+Cassandra | POST | 100  |  |  |
+Cassandra | POST | 1000 |  |  |
+MySQL | GET | 1    |  |  |
+MySQL | GET | 10   |  |  |
+MySQL | GET | 100  |  |  |
+MySQL | GET | 1000 |  |  |
+MySQL | POST | 1    |  |  |
+MySQL | POST | 10   |  |  |
+MySQL | POST | 100  |  |  |
+MySQL | POST | 1000 |  |  |
+
+
+
