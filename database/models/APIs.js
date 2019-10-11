@@ -54,21 +54,48 @@ module.exports = {
       });
     }
   },
-  postOne: (game) => {
+  postOne: () => {
     if (envDb === 'mySql') {
       let queryString = 'INSERT INTO games (game_name, images) VALUES (?, ?)';
+      let queryArgs = ['testPost']
+      let images = {
+        "image1": "http://lorempixel.com/600/337/animals/1",
+        "image2": "http://lorempixel.com/600/337/animals/2",
+        "image3": "http://lorempixel.com/600/337/animals/3",
+        "image4": "http://lorempixel.com/600/337/animals/4",
+        "image5": "http://lorempixel.com/600/337/animals/5",
+        "image6": "http://lorempixel.com/600/337/animals/6",
+        "image7": "http://lorempixel.com/600/337/animals/7",
+        "image8": "http://lorempixel.com/600/337/animals/8",
+        "image9": "http://lorempixel.com/600/337/animals/9",
+        "image10": "http://lorempixel.com/600/337/animals/10"
+      };
 
-      dbM.pool.query(queryString, game, () => {
+      queryArgs.push(JSON.stringify(images));
+
+      dbM.pool.query(queryString, queryArgs, (err, results) => {
         if (err) {
           throw err;
         } else {
-          console.log('saved one to mysql db');
+          // console.log('saved one to mysql db');
         }
       });
     } else if (envDb === 'cassandra') {
       let queryString = 'INSERT INTO photo_carousel.games (game_id, game_name, images) VALUES (?, ?, ?)';
+      let queryArgs = [1, 'testPost', {
+        "image1": "http://lorempixel.com/600/337/animals/1",
+        "image2": "http://lorempixel.com/600/337/animals/2",
+        "image3": "http://lorempixel.com/600/337/animals/3",
+        "image4": "http://lorempixel.com/600/337/animals/4",
+        "image5": "http://lorempixel.com/600/337/animals/5",
+        "image6": "http://lorempixel.com/600/337/animals/6",
+        "image7": "http://lorempixel.com/600/337/animals/7",
+        "image8": "http://lorempixel.com/600/337/animals/8",
+        "image9": "http://lorempixel.com/600/337/animals/9",
+        "image10": "http://lorempixel.com/600/337/animals/10"
+      }]
 
-      dbC.client.execute(queryString, game, () => {
+      dbC.client.execute(queryString, queryArgs, () => {
         if (err) {
           throw err;
         } else {

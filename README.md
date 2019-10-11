@@ -312,16 +312,16 @@ DBMS      | Route | RPS | LATENCY | THROUGHPUT | ERROR RATE |
 --------- | ---- | ----- | ----- |
 Cassandra | GET | 1    | 4.03ms | 41.9rpm | 0.00% |
 Cassandra | GET | 10   | 4.79ms | 498rpm | 0.00% |
-Cassandra | GET | 100  | ? | ? | 0.00% |
+Cassandra | GET | 100  | 5.97ms | 5,450rpm | 0.00% |
 Cassandra | GET | 1000 | 24.2ms | 12,700rpm | 0.00% |
 Cassandra | POST | 1    |  |  |
 Cassandra | POST | 10   |  |  |
 Cassandra | POST | 100  |  |  |
 Cassandra | POST | 1000 |  |  |
-MySQL | GET | 1    |  |  |
-MySQL | GET | 10   |  |  |
-MySQL | GET | 100  |  |  |
-MySQL | GET | 1000 |  |  |
+MySQL | GET | 1    | 4.34ms | 50rpm | 0.00% |
+MySQL | GET | 10   | 3.49ms | 546rpm | 0.00% |
+MySQL | GET | 100  | 4.96ms | 4,230rpm | 0.00% |
+MySQL | GET | 1000 | 25.1ms | 12,400rpm | 0.00% |
 MySQL | POST | 1    |  |  |
 MySQL | POST | 10   |  |  |
 MySQL | POST | 100  |  |  |

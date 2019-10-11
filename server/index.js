@@ -91,12 +91,11 @@ app.get('/api/images', (req, res) => {
   });
 });
 
-// POST endpoints
-app.post('/api/images/seedTenMillion', (req, res) => {
-  // if (envDb === 'cassandra') {
-  //   res.send('okay');
-  //   seedCassandra.seedData(1000,10000000);
-  // }
+// POST one endpoints
+app.post('/api/images', (req, res) => {
+  if (envDb === 'mySql') {
+    dbApis.postOne();
+  }
   // dbApis.post(req.body);
 });
 
