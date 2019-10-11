@@ -314,18 +314,18 @@ Cassandra | GET | 1    | 4.03ms | 41.9rpm | 0.00% |
 Cassandra | GET | 10   | 4.79ms | 498rpm | 0.00% |
 Cassandra | GET | 100  | 5.97ms | 5,450rpm | 0.00% |
 Cassandra | GET | 1000 | 24.2ms | 12,700rpm | 0.00% |
-Cassandra | POST | 1    |  |  |
-Cassandra | POST | 10   |  |  |
-Cassandra | POST | 100  |  |  |
-Cassandra | POST | 1000 |  |  |
+Cassandra | POST | 1    | 4.75ms | 45.5rpm | 0.00% |
+Cassandra | POST | 10   | 3.52ms | 399rpm | 0.00% |
+Cassandra | POST | 100  | 2.47ms | 5,010rpm | 0.00% |
+Cassandra | POST | 1000 | 14.6ms | 17,100rpm | 0.00% |
 MySQL | GET | 1    | 4.34ms | 50rpm | 0.00% |
 MySQL | GET | 10   | 3.49ms | 546rpm | 0.00% |
 MySQL | GET | 100  | 4.96ms | 4,230rpm | 0.00% |
 MySQL | GET | 1000 | 25.1ms | 12,400rpm | 0.00% |
-MySQL | POST | 1    |  |  |
-MySQL | POST | 10   |  |  |
-MySQL | POST | 100  |  |  |
-MySQL | POST | 1000 |  |  |
+MySQL | POST | 1    | 6.91ms | 46.4rpm | 0.00% |
+MySQL | POST | 10   | 7.32ms | 114rpm | 0.00% |
+MySQL | POST | 100  | 5.76ms | 4,650rpm | 0.00% |
+MySQL | POST | 1000 | 38.2ms | 17,400rpm | 0.00% |
 
 
 
