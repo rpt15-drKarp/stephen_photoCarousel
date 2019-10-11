@@ -91,19 +91,24 @@ app.get('/api/images', (req, res) => {
   });
 });
 
-// POST endpoints
-app.post('/api/images/seedTenMillion', (req, res) => {
-  // if (envDb === 'cassandra') {
-  //   res.send('okay');
-  //   seedCassandra.seedData(1000,10000000);
-  // }
-  // dbApis.post(req.body);
+// POST one endpoints
+app.post('/api/images', (req, res) => {
+  res.setHeader('access-control-allow-origin', '*');
+  dbApis.postOne(req.body, (err, data) => {
+    if (err) {
+      console.log('error while saving:', err);
+      res.status(500);
+      res.send('error saving game');
+    } else {
+      res.status(201);
+      res.send('saved successfully');
+    }
+  });
 });
 
 // PUT endpoint
 app.put('/api/images', (req, res) => {
   // arguments must be gameId,column name, and update value
-  // need to get it from req.body maybe?
   dbApis.put(gameId, colName, val);
 });
 
@@ -117,4 +122,3 @@ const port = 3002;
 app.listen(port, () => {
   console.log(`Listening on ${port}`);
 });
-
