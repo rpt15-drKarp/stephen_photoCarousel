@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const Image = require('./Image.js');
 
-mongoose.connect('mongodb://localhost/image', { useNewUrlParser: true });
+if (process.env.ENV !== 'prod') {
+  mongoose.connect('mongodb://localhost/image', { useNewUrlParser: true });
+}
 
 let db = mongoose.connection;
 
