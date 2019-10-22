@@ -9,13 +9,15 @@ const client = new cassandra.Client({
   }
 });
 
-client.connect(function (err) {
-  if (err) {
-    console.log('error in connecting to cassandra:', err);
-  } else {
-    console.log('connected to cassandra');
-  }
-});
+if (process.env.ENV !== 'prod') {
+  client.connect(function (err) {
+    if (err) {
+      console.log('error in connecting to cassandra:', err);
+    } else {
+      console.log('connected to cassandra');
+    }
+  });
+}
 
 const executeConcurrent = cassandra.concurrent.executeConcurrent;
 
