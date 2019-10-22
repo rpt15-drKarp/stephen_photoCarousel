@@ -3,6 +3,7 @@ const util = require('util');
 
 let dbEnv = '';
 process.env.ENV === 'prod' ? dbEnv = 'ec2-52-53-237-172.us-west-1.compute.amazonaws.com' : dbEnv = 'localhost';
+console.log('dbEnv', dbEnv);
 
 const pool = mysql.createPool({
   host     : dbEnv,
