@@ -9,7 +9,7 @@ const client = new cassandra.Client({
   }
 });
 
-if (process.env.ENV !== 'prod') {
+if (process.env.NODE_ENV !== 'prod') {
   client.connect(function (err) {
     if (err) {
       console.log('error in connecting to cassandra:', err);
