@@ -1,7 +1,7 @@
 const mysql = require('mysql');
 const util = require('util');
 
-const dbEnv = '';
+let dbEnv = '';
 process.env.ENV === 'prod' ? dbEnv = '' : dbEnv = 'localhost';
 
 const pool = mysql.createPool({
