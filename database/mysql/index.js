@@ -1,7 +1,11 @@
 const mysql = require('mysql');
 const util = require('util');
 
+const dbEnv = '';
+process.env.ENV === 'prod' ? dbEnv = '' : dbEnv = 'localhost';
+
 const pool = mysql.createPool({
+  //replace local host with ec2 url
   host     : 'localhost',
   user     : 'root',
   password : 'password',

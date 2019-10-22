@@ -14,7 +14,7 @@
 
 1. [Usage](#Usage)
    - [1.1 CRUD Endpoints](#11-crud-endpoints)
-2. [Development Setup](#development-setup)
+2. [Development Setup](#2-development-setup)
    - [2.1 MySQL Setup](#21-mysql-setup)
    - [2.2 Cassandra Setup](#22-cassandra-setup)
    - [2.3 React Build Setup](#23-react-build-setup)
@@ -26,6 +26,7 @@
      - [3.3.2 Cassandra Setup](#332-cassandra-setup)
    - [3.4 New Relic Setup](#34-new-relic-setup)
    - [3.5 DBMS Benchmarking](#35-dbms-benchmarking)
+   - [3.6 Deploymennt](#36-deployment)
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
@@ -327,5 +328,11 @@ Once you update the above script, run 'k6 run loadTests.js' <- If you're not in 
 | MySQL     | POST  | 100  | 5.76ms | 4,650rpm | 0.00% |
 | MySQL     | POST  | 1000 | 38.2ms | 17,400rpm | 0.00% |
 
-
-
+### 3.6 Deployment
+1. Cd into folder with the .pem file
+2. `ssh -i /users/jenn/desktop/hackreactor/rpt15-SDC/sdc.pem ec2-user@ec2-13-56-223-63.us-west-1.compute.amazonaws.com`
+   - replace the link after "ec2-user@" with the url of your ec2 instance
+3. `sudo yum install git`
+4. Set up node.js (https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html)
+5. `git clone <repo>`
+6. `cd into <repo>`
