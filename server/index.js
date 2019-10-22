@@ -6,7 +6,6 @@ const db = require('../database/Image.js');
 const cors = require('cors');
 const compression = require('compression');
 const dbApis = require('../database/models/APIs.js');
-// const seedCassandra = require('../database/cassandra/seed.js');
 
 const app = express();
 
