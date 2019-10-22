@@ -12,6 +12,7 @@ const app = express();
 
 let envDb = process.env.DB;
 console.log('db being used:', envDb);
+console.log('env is:', process.env.ENV);
 
 app.use('/', express.static(__dirname + '/../client/dist'));
 app.use('/:gameId', express.static(__dirname + '/../client/dist'));
