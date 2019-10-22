@@ -58,7 +58,6 @@ const seedData = async (numOfData) => {
   return process.exit();
 };
 
-// seedData(2000);
-seedData(10);
+seedData(2000);
     // console.log('node memory:', process.memoryUsage().heapUsed)
 //
