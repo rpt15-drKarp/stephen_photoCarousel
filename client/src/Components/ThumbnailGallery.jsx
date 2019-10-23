@@ -5,7 +5,7 @@ import ThumbnailEntry from './ThumbnailEntry.jsx';
 const ThumbnailGallery = (props) => (
   <div className={styles.thumbnailContainer}>
     {props.images.map((image) =>
-      <ThumbnailEntry key={image.gameId} image={image} handleImageListClick={props.handleImageListClick} />
+      <ThumbnailEntry key={image} image={image} handleImageListClick={props.handleImageListClick} />
     )}
   </div>
 );

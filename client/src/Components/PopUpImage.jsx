@@ -5,7 +5,7 @@ const PopUpImage = (props) => (
   <div className={styles.popUpImage}>
     <div className={styles.popUpImageInner}>
       <button onClick={props.closePopUp}>close</button>
-      <img className={styles.popUpImageTop} src={props.image.imageUrl} onClick={props.closePopUp}></img>
+      <img className={styles.popUpImageTop} src={props.image} onClick={props.closePopUp}></img>
     </div>
   </div>
 );
