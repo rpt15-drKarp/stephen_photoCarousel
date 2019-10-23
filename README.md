@@ -338,3 +338,9 @@ Once you update the above script, run 'k6 run loadTests.js' <- If you're not in 
 6. `cd into <repo>`
 
 Create separate instances for service, proxy, and database.
+
+#### How to set up mysql database on EC2
+
+#### How to seed external database
+Run the following npm script:
+`"DB='mySql' NODE_ENV='prod' node database/mysql/seed.js && sleep 2 && DB='mySql' NODE_ENV='prod' nodemon server/index.js",`
