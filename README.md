@@ -336,3 +336,5 @@ Once you update the above script, run 'k6 run loadTests.js' <- If you're not in 
 4. Set up node.js (https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html)
 5. `git clone <repo>`
 6. `cd into <repo>`
+
+Create separate instances for service, proxy, and database.

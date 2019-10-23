@@ -10,8 +10,8 @@ const dbApis = require('../database/models/APIs.js');
 const app = express();
 
 let envDb = process.env.DB;
-console.log('db being used:', envDb);
-console.log('env is:', process.env.ENV);
+console.log('database:', envDb);
+console.log('environment:', process.env.NODE_ENV);
 
 app.use('/', express.static(__dirname + '/../client/dist'));
 app.use('/:gameId', express.static(__dirname + '/../client/dist'));
@@ -71,9 +71,13 @@ app.get('/api/images/:gameId/', (req, res) => {
       }
     });
   } else {
-    dbApis.getOne(gameId, (result) => {
-      // console.log('successfully got game data', result);
-      res.send(result);
+    dbApis.getOne(gameId, (err, result) => {
+      if (err) {
+        throw err;
+      } else {
+        // console.log('successfully got game data', result);
+        res.send(result);
+      }
     });
   }
 });

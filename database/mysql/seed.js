@@ -2,7 +2,6 @@ const db = require('./index.js');
 const faker = require('faker');
 
 const seedData = async (numOfData) => {
-  console.log('***')
   console.log('start time', new Date().toLocaleTimeString());
 
   let globalCounter = 0;
