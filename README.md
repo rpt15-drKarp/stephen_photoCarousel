@@ -329,6 +329,8 @@ Once you update the above script, run 'k6 run loadTests.js' <- If you're not in 
 | MySQL     | POST  | 1000 | 38.2ms | 17,400rpm | 0.00% |
 
 ### 3.6 Deployment
+After creating EC2 instance on AWS do the following steps:
+
 1. Cd into folder with the .pem file
 2. `ssh -i /users/jenn/desktop/hackreactor/rpt15-SDC/sdc.pem ec2-user@ec2-13-56-223-63.us-west-1.compute.amazonaws.com`
    - replace the link after "ec2-user@" with the url of your ec2 instance
@@ -340,6 +342,12 @@ Once you update the above script, run 'k6 run loadTests.js' <- If you're not in 
 Create separate instances for service, proxy, and database.
 
 #### How to set up mysql database on EC2
+Install mysql
+`yum install mysql-server`
+Start mysql
+`service mysqld start`
+If you want to update the password
+`mysqladmin -u root password <new password>`
 
 #### How to seed external database
 Run the following npm script:

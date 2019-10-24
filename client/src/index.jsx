@@ -25,7 +25,8 @@ class ImageCarousel extends React.Component {
   }
 
   componentDidMount() {
-    $.get(`http://localhost:3002/api/images/${this.state.gameId}`, (data) => {
+    let url = process.env.API_URL;
+    $.get(`${url}/api/images/${this.state.gameId}`, (data) => {
       let imagesArr = [];
       let imagesObj = JSON.parse(data[0].images);
 
