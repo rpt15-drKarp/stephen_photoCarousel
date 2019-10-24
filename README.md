@@ -307,7 +307,7 @@ export default function() {
 };
 ```
 
-Once you update the above script, run 'k6 run loadTests.js' <- If you're not in the correct folder, make sure to adjust this.
+Once you update the above script, run `k6 run loadTests.js` <- If you're not in the correct folder, make sure to adjust this.
 
 | DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- | ---------- |
@@ -352,3 +352,21 @@ If you want to update the password
 #### How to seed external database
 Run the following npm script:
 `"DB='mySql' NODE_ENV='prod' node database/mysql/seed.js && sleep 2 && DB='mySql' NODE_ENV='prod' nodemon server/index.js",`
+
+##### Problems testing with remote MySql database
+When I was stress testing my database with k6 on my local machine, I did  not have any issues connecting to my local MySql database but once I started trying to test with the remote database on AWS, I received:
+> Error: Handshake inactivity timeout
+
+Solution: Using incorrect ec2 DNS. I was using the DNS for my service rather than the mysql instance. Every time I stop and start an AWS EC2 instance, the DNS changes so I need to update the url that I'm referencing each time.
+
+##### DBMS Benchmarking on deployed mySql database
+| DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
+| --------- | ----- | ---- | ------- | ---------- | ---------- |
+| MySQL     | GET   | 1    | 66.6ms | 45.2rpm | 0.00% |
+| MySQL     | GET   | 10   | 62.2ms | 488rpm | 0.00% |
+| MySQL     | GET   | 100  | 79.6ms | 5,090rpm | 0.00% |
+| MySQL     | GET   | 1000 |  | 12,400rpm | 0.00% |
+| MySQL     | POST  | 1    | 67.5ms | 49.9rpm | 0.00% |
+| MySQL     | POST  | 10   | 66.1ms | 515rpm | 0.00% |
+| MySQL     | POST  | 100  | 82.4ms | 3,890rpm | 0.00% |
+| MySQL     | POST  | 1000 | 136ms | 7,420rpm | 0.00% |
