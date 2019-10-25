@@ -128,7 +128,7 @@ app.delete('/api/images/:gameId', (req, res) => {
 });
 
 
-const port = 3002;
+let port = 3002;
 
 if (process.env.NODE_ENV === 'prod') {
   port = 80;
