@@ -61,6 +61,11 @@ app.get('/api/images/:gameId/', (req, res) => {
   const game_name = req.params.game_name;
   const gameId = req.params.gameId;
 
+  // use to authenticate loader.io
+  if (gameId === 'loaderio-4ec099633c4b6110bd51cbcb43dbcc48') {
+    res.send('loaderio-4ec099633c4b6110bd51cbcb43dbcc48')
+  }
+
   if (envDb === 'mongo') {
     Images.find({}).where('gameId').gt(2).lt(18).sort({ gameId: 1}).exec((err, results) => {
       if (err) {
