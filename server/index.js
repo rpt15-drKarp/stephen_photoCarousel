@@ -130,9 +130,9 @@ app.delete('/api/images/:gameId', (req, res) => {
 
 let port = 3002;
 
-if (process.env.NODE_ENV === 'prod') {
-  port = 80;
-}
+// if (process.env.NODE_ENV === 'prod') {
+//   port = 80;
+// }
 
 app.listen(port, () => {
   console.log(`Listening on ${port}`);

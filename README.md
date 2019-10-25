@@ -26,7 +26,8 @@
      - [3.3.2 Cassandra Setup](#332-cassandra-setup)
    - [3.4 New Relic Setup](#34-new-relic-setup)
    - [3.5 DBMS Benchmarking](#35-dbms-benchmarking)
-   - [3.6 Deploymennt](#36-deployment)
+   - [3.6 Deployment](#36-deployment)
+     - [3.6.1 Deployment Benchmarking](#361-deployment-benchmarking)
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
@@ -336,6 +337,10 @@ After creating EC2 instance on AWS do the following steps:
    - replace the link after "ec2-user@" with the url of your ec2 instance
 3. `sudo yum install git`
 4. Set up node.js (https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html)
+  - `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash`
+  - `. ~/.nvm/nvm.sh`
+  - `nvm install node`
+  - test that node is running properly with `node -e "console.log('Running Node.js ' + process.version)"`
 5. `git clone <repo>`
 6. `cd into <repo>`
 
@@ -359,14 +364,24 @@ When I was stress testing my database with k6 on my local machine, I did  not ha
 
 Solution: Using incorrect ec2 DNS. I was using the DNS for my service rather than the mysql instance. Every time I stop and start an AWS EC2 instance, the DNS changes so I need to update the url that I'm referencing each time.
 
-##### DBMS Benchmarking on deployed mySql database
+##### Steps to take when starting new EC2 instance
+1. Update environmental variables
+  - update on npm script for webpack (this should be updated with the public DNS of the app)
+  - update in mysql index file (this should be updated with the public DNS of the database)
+2. Copy newrelic.js from node_modules and put it in root directory
+  - `cp ~/node_modules/newrelic/newrelic.js ~/stephen_photoCarousel`
+
+### 3.6.1 Deployment Benchmarking
+
+#### Benchmark
+
 | DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- | ---------- |
-| MySQL     | GET   | 1    | 66.6ms | 45.2rpm | 0.00% |
-| MySQL     | GET   | 10   | 62.2ms | 488rpm | 0.00% |
-| MySQL     | GET   | 100  | 79.6ms | 5,090rpm | 0.00% |
-| MySQL     | GET   | 1000 |  | 12,400rpm | 0.00% |
-| MySQL     | POST  | 1    | 67.5ms | 49.9rpm | 0.00% |
-| MySQL     | POST  | 10   | 66.1ms | 515rpm | 0.00% |
-| MySQL     | POST  | 100  | 82.4ms | 3,890rpm | 0.00% |
-| MySQL     | POST  | 1000 | 136ms | 7,420rpm | 0.00% |
+| MySQL     | GET   | 1    | 105ms | 60rpm | 0.00% |
+| MySQL     | GET   | 10   | 94ms | 600rpm | 0.00% |
+| MySQL     | GET   | 100  | 120ms | 6,000rpm | 0.00% |
+| MySQL     | GET   | 1000 | 124ms | 60,000rpm | 0.00% |
+| MySQL     | POST  | 1    | 81ms | 60rpm | 0.00% |
+| MySQL     | POST  | 10   | 65ms | 600rpm | 0.00% |
+| MySQL     | POST  | 100  | 63ms | 6,000rpm | 0.00% |
+| MySQL     | POST  | 1000 | 69ms | 60,000rpm | 0.00% |
