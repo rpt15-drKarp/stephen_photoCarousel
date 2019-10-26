@@ -1,9 +1,11 @@
 const mysql = require('mysql');
 const util = require('util');
+const dnsConfig = require('../../config.js');
 
 let dbEnv = '';
-process.env.NODE_ENV === 'prod' ? dbEnv = 'ec2-13-56-229-2.us-west-1.compute.amazonaws.com' : dbEnv = 'localhost';
+process.env.NODE_ENV === 'prod' ? dbEnv = dnsConfig.dbUrl : dbEnv = 'localhost';
 console.log('mysql host:', dbEnv);
+console.log('dnsConfig.dbUrl:', dnsConfig.dbUrl);
 
 const pool = mysql.createPool({
   host     : dbEnv,
