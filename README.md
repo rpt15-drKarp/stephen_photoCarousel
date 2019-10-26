@@ -365,9 +365,7 @@ When I was stress testing my database with k6 on my local machine, I did  not ha
 Solution: Using incorrect ec2 DNS. I was using the DNS for my service rather than the mysql instance. Every time I stop and start an AWS EC2 instance, the DNS changes so I need to update the url that I'm referencing each time.
 
 ##### Steps to take when starting new EC2 instance
-1. Update environmental variables
-  - update on npm script for webpack (this should be updated with the public DNS of the app)
-  - update in mysql index file (this should be updated with the public DNS of the database)
+1. Update environmental variables on config.js file in root directory
 2. Copy newrelic.js from node_modules and put it in root directory
   - `cp ~/node_modules/newrelic/newrelic.js ~/stephen_photoCarousel`
 
