@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import styles from '../dist/styles.css'
+import dnsConfig from '../../config.js';
 
 import ImageItem from './Components/ImageItem.jsx';
 import ThumbnailGallery from './Components/ThumbnailGallery.jsx';
@@ -25,7 +26,7 @@ class ImageCarousel extends React.Component {
   }
 
   componentDidMount() {
-    let url = process.env.API_URL;
+    let url = dnsConfig.appUrl;
     console.log('url', url);
     // not using url right now because browser is automatically adding it
     $.get(`/api/images/${this.state.gameId}`, (data) => {
