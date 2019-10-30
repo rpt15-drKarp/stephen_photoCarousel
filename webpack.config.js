@@ -5,18 +5,22 @@ const CompressionPlugin = require('compression-webpack-plugin');
 // const S3Plugin = require('webpack-s3-plugin');
 
 module.exports = {
-  entry: `./client/src/Index.jsx`,
+  entry: {
+    app: `./client/src/Index.jsx`
+  },
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
+        use: [
+          {
           loader: 'babel-loader'
           // options: {
           //   presets: ['@babel/preset-react', '@babel/preset-env']
           // }
-        }
+          }
+        ]
       },
       {
         test: /\.css$/,
@@ -34,7 +38,7 @@ module.exports = {
       }
     ]
   },
-
+  devtool: 'cheap-module-eval-source-map',
   output: {
     filename: 'assets/[name].bundle.js',
     path: path.resolve(__dirname, 'public')

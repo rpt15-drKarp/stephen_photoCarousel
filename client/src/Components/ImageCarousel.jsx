@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import styles from '../dist/styles.css'
 
 import ImageItem from './ImageItem.jsx';
 import ThumbnailGallery from './ThumbnailGallery.jsx';
