@@ -1,11 +1,23 @@
-const rewrelic = require('newrelic');
-const express = require('express');
-const bodyParser = require('body-parser');
-const Images = require('../database/Image.js');
-const db = require('../database/Image.js');
-const cors = require('cors');
-const compression = require('compression');
-const dbApis = require('../database/models/APIs.js');
+import newrelic from 'newrelic';
+import express from 'express';
+import bodyParser from 'body-parser';
+import compression from 'compression';
+import cors from 'cors';
+import { renderToString } from 'react-dom/server';
+import ImageCarousel from '../client/src/Components/ImageCarousel.jsx';
+import dbApis from '../database/models/APIs.js';
+import Images from '../database/Image.js';
+import db from '../database/Image.js';
+// import seedCassandra from '../database/cassandra/seed.js';
+
+// const rewrelic = require('newrelic');
+// const express = require('express');
+// const bodyParser = require('body-parser');
+// const Images = require('../database/Image.js');
+// const db = require('../database/Image.js');
+// const cors = require('cors');
+// const compression = require('compression');
+// const dbApis = require('../database/models/APIs.js');
 // const seedCassandra = require('../database/cassandra/seed.js');
 
 const app = express();
@@ -13,13 +25,35 @@ const app = express();
 let envDb = process.env.DB;
 console.log('db being used:', envDb);
 
-app.use('/', express.static(__dirname + '/../client/dist'));
+// app.use('/', express.static(__dirname + '/../client/dist'));
 app.use('/:gameId', express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(compression());
 
+app.get('/*', (req, res) => {
+  const jsx = <ImageCarousel />;
+  const reactDom = renderToString(jsx);
+  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.end(htmlTemplate(reactDom));
+})
+
+const htmlTemplate = function(reactDom) {
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Photo Carousel</title>
+      <link rel="stylesheet" type="text/css" href="styles.css">
+    </head>
+    <body>
+      <div id="photogallery">${reactDom}</div>
+      <script src="../assets/app.bundle.js"></script>
+    </body>
+    </html>
+  `
+};
 
 // Josh's endpoint
 app.get('/api/aboutImage/:gameId', (req, res) => {
