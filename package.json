@@ -8,10 +8,10 @@
     "node": ">=6.13.0"
   },
   "scripts": {
-    "startMongo": "DB='mongo' nodemon server/index.js",
-    "startMySql": "DB='mySql' NODE_ENV='dev' nodemon server/index.js",
-    "start-prod": "DB='mySql' NODE_ENV='prod' nodemon server/index.js",
-    "startCassandra": "DB='cassandra' nodemon server/index.js",
+    "startMongo": "DB='mongo' nodemon index.js",
+    "startMySql": "DB='mySql' NODE_ENV='dev' nodemon index.js",
+    "start-prod": "DB='mySql' NODE_ENV='prod' nodemon index.js",
+    "startCassandra": "DB='cassandra' nodemon index.js",
     "db:setup": "node database/seed.js",
     "mysql:setup": "node database/mysql/seed.js",
     "cassandra:setup": "node database/cassandra/seed.js",
@@ -43,6 +43,7 @@
     "@babel/core": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.6.2",
     "babel-loader": "^8.0.6",
     "babel-watch": "^7.0.0",
     "compression-webpack-plugin": "^3.0.0",
