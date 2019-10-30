@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import styles from '../dist/styles.css'
+import dnsConfig from '../../config.js';
 
 import ImageItem from './Components/ImageItem.jsx';
 import ThumbnailGallery from './Components/ThumbnailGallery.jsx';
@@ -25,10 +26,22 @@ class ImageCarousel extends React.Component {
   }
 
   componentDidMount() {
-    $.get(`http://localhost:3002/api/images/${this.state.gameId}`, (data) => {
+    let url = dnsConfig.appUrl;
+    console.log('url', url);
+    // not using url right now because browser is automatically adding it
+    $.get(`/api/images/${this.state.gameId}`, (data) => {
+      let imagesArr = [];
+      let imagesObj = JSON.parse(data[0].images);
+
+      for (let img in imagesObj) {
+        imagesArr.push(imagesObj[img]);
+      }
+
+      console.log('imagesArr', imagesArr);
+
       this.setState({
-        images: data,
-        currentImage: data[0]
+        images: imagesArr,
+        currentImage: JSON.parse(data[0].images).image1
       });
     });
   }

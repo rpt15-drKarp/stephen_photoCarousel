@@ -14,7 +14,7 @@
 
 1. [Usage](#Usage)
    - [1.1 CRUD Endpoints](#11-crud-endpoints)
-2. [Development Setup](#development-setup)
+2. [Development Setup](#2-development-setup)
    - [2.1 MySQL Setup](#21-mysql-setup)
    - [2.2 Cassandra Setup](#22-cassandra-setup)
    - [2.3 React Build Setup](#23-react-build-setup)
@@ -26,6 +26,8 @@
      - [3.3.2 Cassandra Setup](#332-cassandra-setup)
    - [3.4 New Relic Setup](#34-new-relic-setup)
    - [3.5 DBMS Benchmarking](#35-dbms-benchmarking)
+   - [3.6 Deployment](#36-deployment)
+     - [3.6.1 Deployment Benchmarking](#361-deployment-benchmarking)
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
@@ -306,7 +308,7 @@ export default function() {
 };
 ```
 
-Once you update the above script, run 'k6 run loadTests.js' <- If you're not in the correct folder, make sure to adjust this.
+Once you update the above script, run `k6 run loadTests.js` <- If you're not in the correct folder, make sure to adjust this.
 
 | DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- | ---------- |
@@ -327,5 +329,57 @@ Once you update the above script, run 'k6 run loadTests.js' <- If you're not in 
 | MySQL     | POST  | 100  | 5.76ms | 4,650rpm | 0.00% |
 | MySQL     | POST  | 1000 | 38.2ms | 17,400rpm | 0.00% |
 
+### 3.6 Deployment
+After creating EC2 instance on AWS do the following steps:
 
+1. Cd into folder with the .pem file
+2. `ssh -i /users/jenn/desktop/hackreactor/rpt15-SDC/sdc.pem ec2-user@ec2-13-56-223-63.us-west-1.compute.amazonaws.com`
+   - replace the link after "ec2-user@" with the url of your ec2 instance
+3. `sudo yum install git`
+4. Set up node.js (https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-up-node-on-ec2-instance.html)
+  - `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash`
+  - `. ~/.nvm/nvm.sh`
+  - `nvm install node`
+  - test that node is running properly with `node -e "console.log('Running Node.js ' + process.version)"`
+5. `git clone <repo>`
+6. `cd into <repo>`
 
+Create separate instances for service, proxy, and database.
+
+#### How to set up mysql database on EC2
+Install mysql
+`yum install mysql-server`
+Start mysql
+`service mysqld start`
+If you want to update the password
+`mysqladmin -u root password <new password>`
+
+#### How to seed external database
+Run the following npm script:
+`"DB='mySql' NODE_ENV='prod' node database/mysql/seed.js && sleep 2 && DB='mySql' NODE_ENV='prod' nodemon server/index.js",`
+
+##### Problems testing with remote MySql database
+When I was stress testing my database with k6 on my local machine, I did  not have any issues connecting to my local MySql database but once I started trying to test with the remote database on AWS, I received:
+> Error: Handshake inactivity timeout
+
+Solution: Using incorrect ec2 DNS. I was using the DNS for my service rather than the mysql instance. Every time I stop and start an AWS EC2 instance, the DNS changes so I need to update the url that I'm referencing each time.
+
+##### Steps to take when starting new EC2 instance
+1. Update environmental variables on config.js file in root directory
+2. Copy newrelic.js from node_modules and put it in root directory
+  - `cp ~/node_modules/newrelic/newrelic.js ~/stephen_photoCarousel`
+
+### 3.6.1 Deployment Benchmarking
+
+#### Benchmark
+
+| DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
+| --------- | ----- | ---- | ------- | ---------- | ---------- |
+| MySQL     | GET   | 1    | 105ms | 60rpm | 0.00% |
+| MySQL     | GET   | 10   | 94ms | 600rpm | 0.00% |
+| MySQL     | GET   | 100  | 120ms | 6,000rpm | 0.00% |
+| MySQL     | GET   | 1000 | 124ms | 60,000rpm | 0.00% |
+| MySQL     | POST  | 1    | 81ms | 60rpm | 0.00% |
+| MySQL     | POST  | 10   | 65ms | 600rpm | 0.00% |
+| MySQL     | POST  | 100  | 63ms | 6,000rpm | 0.00% |
+| MySQL     | POST  | 1000 | 69ms | 60,000rpm | 0.00% |

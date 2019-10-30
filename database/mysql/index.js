@@ -1,8 +1,13 @@
 const mysql = require('mysql');
 const util = require('util');
+const dnsConfig = require('../../config.js');
+
+let dbEnv = '';
+process.env.NODE_ENV === 'prod' ? dbEnv = dnsConfig.dbUrl : dbEnv = 'localhost';
+console.log('mysql host:', dbEnv);
 
 const pool = mysql.createPool({
-  host     : 'localhost',
+  host     : dbEnv,
   user     : 'root',
   password : 'password',
   database: 'photoCarousel'
