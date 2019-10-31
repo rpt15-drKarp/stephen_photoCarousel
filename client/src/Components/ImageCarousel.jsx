@@ -101,5 +101,3 @@ class ImageCarousel extends React.Component {
 }
 
 export default ImageCarousel;
-
-ReactDOM.render(<ImageCarousel/>, document.getElementById('photogallery'));

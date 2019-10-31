@@ -9,7 +9,7 @@
   },
   "scripts": {
     "startMongo": "DB='mongo' nodemon index.js",
-    "startMySql": "DB='mySql' NODE_ENV='dev' nodemon index.js",
+    "startMySql": "DB='mySql' NODE_ENV='dev' node index.js",
     "start-prod": "DB='mySql' NODE_ENV='prod' nodemon index.js",
     "startCassandra": "DB='cassandra' nodemon index.js",
     "db:setup": "node database/seed.js",
@@ -36,11 +36,13 @@
     "newrelic": "^5.13.0",
     "nodemon": "^1.19.1",
     "react": "^16.9.0",
-    "react-dom": "^16.9.0"
+    "react-dom": "^16.9.0",
+    "styled-components": "^4.4.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.6.2",
