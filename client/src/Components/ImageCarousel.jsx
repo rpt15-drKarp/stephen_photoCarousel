@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import styles from '../dist/styles.css'
 import dnsConfig from '../../../config.js';
+import location from 'location';
 
 import ImageItem from './ImageItem.jsx';
 import ThumbnailGallery from './ThumbnailGallery.jsx';
@@ -12,8 +12,8 @@ class ImageCarousel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      gameId: window.location.pathname.split('/')[1],
-      // game_name: window.location.pathname.split('/')[2],
+      gameId: location.pathname.split('/')[1],
+      // game_name: pathname.split('/')[2],
       images: [],
       currentImage: '',
       showPopUp: false,

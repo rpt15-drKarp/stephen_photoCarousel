@@ -3,6 +3,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import cors from 'cors';
+import React from 'react';
 import { renderToString } from 'react-dom/server';
 import ImageCarousel from '../client/src/Components/ImageCarousel.jsx';
 import dbApis from '../database/models/APIs.js';
