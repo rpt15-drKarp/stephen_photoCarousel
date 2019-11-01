@@ -5,6 +5,8 @@ import compression from 'compression';
 import cors from 'cors';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
+import { StaticRouter } from 'react-router-dom';
+
 import ImageCarousel from '../client/src/Components/ImageCarousel.jsx';
 import dbApis from '../database/models/APIs.js';
 import Images from '../database/Image.js';
@@ -34,8 +36,12 @@ app.use(cors());
 app.use(compression());
 
 app.get('/*', (req, res) => {
-  const jsx = <ImageCarousel />;
-  const reactDom = renderToString(jsx);
+  console.log('req.url for router', req.url);
+  const reactDom = renderToString(
+    <StaticRouter location={req.url} >
+      <ImageCarousel location={req.url} />
+    </StaticRouter>
+  );
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.end(htmlTemplate(reactDom));
 })
@@ -50,7 +56,7 @@ const htmlTemplate = function(reactDom) {
     </head>
     <body>
       <div id="photogallery">${reactDom}</div>
-      <script src="../assets/app.bundle.js"></script>
+      <script src="../public/assets/app.bundle.js"></script>
     </body>
     </html>
   `
