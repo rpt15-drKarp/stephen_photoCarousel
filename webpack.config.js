@@ -6,19 +6,19 @@ const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = {
   entry: {
-    app: `./client/src/Index.jsx`
+    app: './client/src/Index.jsx'
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.jsx$/,
         exclude: /node_modules/,
         use: [
           {
-          loader: 'babel-loader'
-          // options: {
-          //   presets: ['@babel/preset-react', '@babel/preset-env']
-          // }
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-react', '@babel/preset-env']
+          }
           }
         ]
       },
