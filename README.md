@@ -403,5 +403,4 @@ require('./server/index.js');
 Once I changed my server to perform server side rendering, my stylesheet stopped working. My solution is to use react styled components.
 
 ##### Cannot use window.location on server side rendering
-
-
+Attempted to use react-router to get the URL from the client but that did not work. Seems like this method was getting the path of the file that requested it rather than the web page url.
