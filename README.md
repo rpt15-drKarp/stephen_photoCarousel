@@ -28,6 +28,8 @@
    - [3.5 DBMS Benchmarking](#35-dbms-benchmarking)
    - [3.6 Deployment](#36-deployment)
      - [3.6.1 Deployment Benchmarking](#361-deployment-benchmarking)
+   - [3.7 Optimization](#37-optimization)
+     - [3.7.1 Server Side Rendering](#371-server-side-rendering)
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
@@ -277,7 +279,7 @@ Insert volume | Concurrent Execution | Batch Inserts |
 
 ### 3.4 New Relic Setup
 
-### 3.5 DMBS Benchmarking
+### 3.5 DBMS Benchmarking
 In order to start load testing each database, I created separate files to house the different queries that will be required for each database.
 
 I also created an environmental variable for the database so that depending on which script I use to start my service, it'll know which database to use.
@@ -383,3 +385,22 @@ Solution: Using incorrect ec2 DNS. I was using the DNS for my service rather tha
 | MySQL     | POST  | 10   | 65ms | 600rpm | 0.00% |
 | MySQL     | POST  | 100  | 63ms | 6,000rpm | 0.00% |
 | MySQL     | POST  | 1000 | 69ms | 60,000rpm | 0.00% |
+
+### 3.7 Optimization
+### 3.7.1 Server Side Rendering
+
+#### Obstacles
+##### Using import statements in node
+1. Create a separate index.js file in the root directory.
+2.
+```
+require('@babel/register');
+require('./server/index.js');
+```
+3. In package.json, for your starting script, reference this new index.js file rather than your server file. So it should be `nodemon index.js`
+
+##### Stylesheets can't be used in server side rendering
+Once I changed my server to perform server side rendering, my stylesheet stopped working. My solution is to use react styled components.
+
+##### Cannot use window.location on server side rendering
+Attempted to use react-router to get the URL from the client but that did not work. Seems like this method was getting the path of the file that requested it rather than the web page url.
