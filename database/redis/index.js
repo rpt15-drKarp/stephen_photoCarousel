@@ -15,9 +15,9 @@ let postOneRedis = (key, value) => {
 let getOneRedis = (key, callback) => {
   client.get(key, (err, result) => {
     if (err) {
-      throw err;
+      callback(err);
     } else {
-      callback(result);
+      callback(null, result);
     }
   })
 }
