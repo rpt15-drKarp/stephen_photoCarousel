@@ -6,6 +6,7 @@ const db = require('../database/Image.js');
 const cors = require('cors');
 const compression = require('compression');
 const dbApis = require('../database/models/APIs.js');
+const redisApis = require('../database/redis/index.js');
 
 const app = express();
 
