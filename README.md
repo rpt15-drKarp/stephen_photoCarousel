@@ -388,6 +388,7 @@ Solution: Using incorrect ec2 DNS. I was using the DNS for my service rather tha
 
 ### 3.7 Optimization
 ### 3.7.1 Server Side Rendering
+I haven't completed setting up server side rendering yet.
 
 #### Obstacles
 ##### Using import statements in node
@@ -404,3 +405,54 @@ Once I changed my server to perform server side rendering, my stylesheet stopped
 
 ##### Cannot use window.location on server side rendering
 Attempted to use react-router to get the URL from the client but that did not work. Seems like this method was getting the path of the file that requested it rather than the web page url.
+
+### 3.7.2 Redis Cache
+Redis is an in-memory data structure store and it supports both LRU (Least Recently Used) and LFU (Least Frequently Used) eviction policies. I am using this as one of my optimization strategies because it'll be faster to get data from memeory (when applicable) than always making a call to the database.
+
+I will be using the allkeys-lru policy because with an app like Steam, I expect that certain games will be more popular than others and that popularity will continually change through the years. With that being the case, it makes more sense to always keep the the recent popular items in memory.
+
+#### Setup Redis
+1. Run the following commands in terminal:
+  ```
+  sudo yum -y install gcc make # install GCC compiler
+  cd /usr/local/src
+  sudo wget http://download.redis.io/redis-stable.tar.gz
+  sudo tar xvzf redis-stable.tar.gz
+  sudo rm -f redis-stable.tar.gz
+  cd redis-stable
+  sudo make distclean
+  sudo make
+  sudo yum install -y tcl
+  ```
+2. Run a test to make sure Redis is set up correctly
+`sudo make test`
+If successful, you should see a smiley face like, \o/ and a message saying that "All tests passed without errors!"
+
+3. Copy Redis server and CLI
+```
+sudo cp src/redis-server /usr/local/bin/
+sudo cp src/redis-cli /usr/local/bin/
+```
+
+4. Copy over config file
+`sudo cp /usr/local/src/redis-stable/redis.config /etc/redis/redis.conf`
+
+5. Update config file
+```
+vim /etc/redis/redis.conf
+
+bind 127.0.0.1 -> #bind 127.0.0.1
+dir ./ -> dir /etc/redis
+daemonize no -> daemonize yes
+protected-mode yes -> protected-mode no
+pidfile /var/run/redis.pid -> pidfile /etc/redis/redis.pid
+logfile '' -> logfile /etc/redis/redis_log
+#maxmemory <bytes> -> maxmemory 700
+#maxmemory-policy noeviction -> maxmemory-policy allkeys-lru
+```
+
+6. Start the server:
+ `redis-server`
+
+7. Check if Redis is working
+`redis-cli ping`
