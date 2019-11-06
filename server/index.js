@@ -130,7 +130,7 @@ app.get('/api/images/:gameId/', (req, res) => {
               // add data to redis
               redisClient.set(gameId, JSON.stringify(dbResult), redis.print);
               // return data
-              res.send(result);
+              res.send(dbResult);
             }
           });
         }
