@@ -107,32 +107,40 @@ app.get('/api/images/:gameId/', (req, res) => {
     //     res.send(redisGetResult);
     //   }
     // })
-    redisClient.exists(gameId, (err, reply) => {
-      // if key exists
-      if (reply === 1) {
-        // get value from redis cache
-        redisClient.get(gameId, (error, redisResult) => {
-          if (error) {
-            throw error;
-          } else {
-            console.log('got data from redis:', redisResult)
-            res.send(redisResult);
-          }
-        })
-      } else { // if key doesn't exist
-        dbApis.getOne(gameId, (err, dbResult) => {
-          if (err) {
-            throw err;
-          } else {
-            // console.log('successfully got game data', result);
-            // add data to redis
-            redisClient.set(gameId, JSON.stringify(dbResult));
-            // return data
-            res.send(result);
-          }
-        });
+
+    redisClient.get(gameId, (err, redisResult) => {
+      // if data is NOT in redis
+      if (err || redisResult === null) {
+        if (envDb === 'mongo') {
+          Images.find({}).where('gameId').gt(2).lt(18).sort({ gameId: 1}).exec((err, results) => {
+            if (err) {
+              console.error(err);
+            } else {
+              // const imageUrl = results.imageUrl;
+              res.json(results);
+            }
+          });
+        } else {
+          // query mysql
+          dbApis.getOne(gameId, (err, dbResult) => {
+            if (err) {
+              throw err;
+            } else {
+              // console.log('successfully got game data', result);
+              // add data to redis
+              redisClient.set(gameId, JSON.stringify(dbResult), redis.print);
+              // return data
+              res.send(result);
+            }
+          });
+        }
+
+      } else {
+        res.send(redisResult)
       }
     });
+
+
   }
 
 });
