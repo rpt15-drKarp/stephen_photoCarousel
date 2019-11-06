@@ -6,6 +6,7 @@ const db = require('../database/Image.js');
 const cors = require('cors');
 const compression = require('compression');
 const dbApis = require('../database/models/APIs.js');
+const redisApis = require('../database/redis/index.js');
 
 const app = express();
 
@@ -65,25 +66,40 @@ app.get('/api/images/:gameId/', (req, res) => {
   if (gameId === 'loaderio-4ec099633c4b6110bd51cbcb43dbcc48') {
     res.send('loaderio-4ec099633c4b6110bd51cbcb43dbcc48')
   } else {
-    if (envDb === 'mongo') {
-      Images.find({}).where('gameId').gt(2).lt(18).sort({ gameId: 1}).exec((err, results) => {
-        if (err) {
-          console.error(err);
+    // if data is in redis
+    redisApis.getOneRedis(gameId, (err, redisResult) => {
+      // if data is NOT in redis
+      if (err) {
+        if (envDb === 'mongo') {
+          Images.find({}).where('gameId').gt(2).lt(18).sort({ gameId: 1}).exec((err, results) => {
+            if (err) {
+              console.error(err);
+            } else {
+              // const imageUrl = results.imageUrl;
+              res.json(results);
+            }
+          });
         } else {
-          // const imageUrl = results.imageUrl;
-          res.json(results);
+          // query mysql
+          dbApis.getOne(gameId, (err, result) => {
+            if (err) {
+              throw err;
+            } else {
+              // console.log('successfully got game data', result);
+              // add data to redis
+              redisApis.postOneRedis(gameId, result);
+              // return data
+              res.send(result);
+            }
+          });
         }
-      });
-    } else {
-      dbApis.getOne(gameId, (err, result) => {
-        if (err) {
-          throw err;
-        } else {
-          // console.log('successfully got game data', result);
-          res.send(result);
-        }
-      });
-    }
+
+      } else {
+        res.send(redisResult)
+      }
+    });
+
+
   }
 
 });
