@@ -84,30 +84,11 @@ app.get('/api/overviewImage/:gameId', (req, res) => {
 app.get('/api/images/:gameId/', (req, res) => {
   const game_name = req.params.game_name;
   const gameId = req.params.gameId;
-  console.log('gameId', gameId);
+  // console.log('gameId', gameId);
   // use to authenticate loader.io
   if (gameId === 'loaderio-4ec099633c4b6110bd51cbcb43dbcc48') {
     res.send('loaderio-4ec099633c4b6110bd51cbcb43dbcc48')
   } else {
-    // if data is in redis
-    // let getOneRedis = (key, callback) => {
-    //   client.get(key, (err, result) => {
-    //     if (err) {
-    //       callback(err);
-    //     } else {
-    //       callback(null, result);
-    //     }
-    //   })
-    // }
-    // redisClient.get(gameId, (err, redisGetResult) => {
-    //   if (err) {
-    //     throw err;
-    //   } else {
-    //     console.log('sending from redis cache');
-    //     res.send(redisGetResult);
-    //   }
-    // })
-
     redisClient.get(gameId, (err, redisResult) => {
       // if data is NOT in redis
       if (err || redisResult === null) {
