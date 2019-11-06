@@ -85,9 +85,9 @@ app.get('/api/images/:gameId/', (req, res) => {
   const game_name = req.params.game_name;
   const gameId = req.params.gameId;
   // console.log('gameId', gameId);
-  // redisClient.get(gameId, (err, redisResult) => {
-  //   // if data is NOT in redis
-  //   if (err || redisResult === null) {
+  redisClient.get(gameId, (err, redisResult) => {
+    // if data is NOT in redis
+    if (err || redisResult === null) {
       if (envDb === 'mongo') {
         Images.find({}).where('gameId').gt(2).lt(18).sort({ gameId: 1}).exec((err, results) => {
           if (err) {
@@ -105,18 +105,18 @@ app.get('/api/images/:gameId/', (req, res) => {
           } else {
             // console.log('successfully got game data', result);
             // add data to redis
-            // redisClient.set(gameId, JSON.stringify(dbResult), redis.print);
+            redisClient.set(gameId, JSON.stringify(dbResult), redis.print);
             // return data
             res.send(dbResult);
           }
         });
       }
 
-  //   } else {
-  //     console.log('cached result:', redisResult);
-  //     res.send(redisResult)
-  //   }
-  // });
+    } else {
+      console.log('cached result:', redisResult);
+      res.send(redisResult)
+    }
+    });
 });
 
 app.get('*.js', (req, res, next) => {
