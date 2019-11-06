@@ -374,7 +374,6 @@ Solution: Using incorrect ec2 DNS. I was using the DNS for my service rather tha
 ### 3.6.1 Deployment Benchmarking
 
 #### Benchmark
-
 | DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- | ---------- |
 | MySQL     | GET   | 1    | 105ms | 60rpm | 0.00% |
@@ -387,6 +386,14 @@ Solution: Using incorrect ec2 DNS. I was using the DNS for my service rather tha
 | MySQL     | POST  | 1000 | 69ms | 60,000rpm | 0.00% |
 
 ### 3.7 Optimization
+
+### Original Benchmark for > 1000 RPS
+| DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
+| --------- | ----- | ---- | ------- | ---------- | ---------- |
+| MySQL     | GET   | 2000    | 7521ms | 9487rpm | 49.22% |
+| MySQL     | GET   | 5000   | 8757ms | 3548rpm | 62.16% |
+| MySQL     | GET   | 10000  | 9738ms | 2188rpm | 85.57% |
+
 ### 3.7.1 Server Side Rendering
 I haven't completed setting up server side rendering yet.
 
