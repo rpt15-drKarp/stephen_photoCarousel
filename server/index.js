@@ -6,7 +6,30 @@ const db = require('../database/Image.js');
 const cors = require('cors');
 const compression = require('compression');
 const dbApis = require('../database/models/APIs.js');
-const redisApis = require('../database/redis/index.js');
+const redis = require('redis');
+
+let redisClient = redis.createClient(6379);
+
+redisClient.on('error', function(err){
+  console.log('Error connecting to redis:', err)
+});
+
+// post to redis
+// let postOneRedis = (key, value, callback) => {
+//   client.set(key, value, redis.print);
+// }
+
+// retrieve from redis
+// let getOneRedis = (key, callback) => {
+//   client.get(key, (err, result) => {
+//     if (err) {
+//       callback(err);
+//     } else {
+//       callback(null, result);
+//     }
+//   })
+// }
+
 
 const app = express();
 
@@ -67,39 +90,49 @@ app.get('/api/images/:gameId/', (req, res) => {
     res.send('loaderio-4ec099633c4b6110bd51cbcb43dbcc48')
   } else {
     // if data is in redis
-    redisApis.getOneRedis(gameId, (err, redisResult) => {
-      // if data is NOT in redis
-      if (err) {
-        if (envDb === 'mongo') {
-          Images.find({}).where('gameId').gt(2).lt(18).sort({ gameId: 1}).exec((err, results) => {
-            if (err) {
-              console.error(err);
-            } else {
-              // const imageUrl = results.imageUrl;
-              res.json(results);
-            }
-          });
-        } else {
-          // query mysql
-          dbApis.getOne(gameId, (err, result) => {
-            if (err) {
-              throw err;
-            } else {
-              // console.log('successfully got game data', result);
-              // add data to redis
-              redisApis.postOneRedis(gameId, result);
-              // return data
-              res.send(result);
-            }
-          });
-        }
-
-      } else {
-        res.send(redisResult)
+    // let getOneRedis = (key, callback) => {
+    //   client.get(key, (err, result) => {
+    //     if (err) {
+    //       callback(err);
+    //     } else {
+    //       callback(null, result);
+    //     }
+    //   })
+    // }
+    // redisClient.get(gameId, (err, redisGetResult) => {
+    //   if (err) {
+    //     throw err;
+    //   } else {
+    //     console.log('sending from redis cache');
+    //     res.send(redisGetResult);
+    //   }
+    // })
+    redisClient.exists(gameId, (err, reply) => {
+      // if key exists
+      if (reply === 1) {
+        // get value from redis cache
+        redisClient.get(gameId, (error, redisResult) => {
+          if (error) {
+            throw error;
+          } else {
+            console.log('got data from redis:', redisResult)
+            res.send(redisResult);
+          }
+        })
+      } else { // if key doesn't exist
+        dbApis.getOne(gameId, (err, dbResult) => {
+          if (err) {
+            throw err;
+          } else {
+            // console.log('successfully got game data', result);
+            // add data to redis
+            redisClient.set(gameId, JSON.stringify(dbResult));
+            // return data
+            res.send(result);
+          }
+        });
       }
     });
-
-
   }
 
 });
