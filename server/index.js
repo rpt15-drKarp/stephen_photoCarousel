@@ -85,45 +85,38 @@ app.get('/api/images/:gameId/', (req, res) => {
   const game_name = req.params.game_name;
   const gameId = req.params.gameId;
   // console.log('gameId', gameId);
-  // use to authenticate loader.io
-  if (gameId === 'loaderio-4ec099633c4b6110bd51cbcb43dbcc48') {
-    res.send('loaderio-4ec099633c4b6110bd51cbcb43dbcc48')
-  } else {
-    redisClient.get(gameId, (err, redisResult) => {
-      // if data is NOT in redis
-      if (err || redisResult === null) {
-        if (envDb === 'mongo') {
-          Images.find({}).where('gameId').gt(2).lt(18).sort({ gameId: 1}).exec((err, results) => {
-            if (err) {
-              console.error(err);
-            } else {
-              // const imageUrl = results.imageUrl;
-              res.json(results);
-            }
-          });
-        } else {
-          // query mysql
-          dbApis.getOne(gameId, (err, dbResult) => {
-            if (err) {
-              throw err;
-            } else {
-              // console.log('successfully got game data', result);
-              // add data to redis
-              redisClient.set(gameId, JSON.stringify(dbResult), redis.print);
-              // return data
-              res.send(dbResult);
-            }
-          });
-        }
-
+  // redisClient.get(gameId, (err, redisResult) => {
+  //   // if data is NOT in redis
+  //   if (err || redisResult === null) {
+      if (envDb === 'mongo') {
+        Images.find({}).where('gameId').gt(2).lt(18).sort({ gameId: 1}).exec((err, results) => {
+          if (err) {
+            console.error(err);
+          } else {
+            // const imageUrl = results.imageUrl;
+            res.json(results);
+          }
+        });
       } else {
-        res.send(redisResult)
+        // query mysql
+        dbApis.getOne(gameId, (err, dbResult) => {
+          if (err) {
+            throw err;
+          } else {
+            // console.log('successfully got game data', result);
+            // add data to redis
+            // redisClient.set(gameId, JSON.stringify(dbResult), redis.print);
+            // return data
+            res.send(dbResult);
+          }
+        });
       }
-    });
 
-
-  }
-
+  //   } else {
+  //     console.log('cached result:', redisResult);
+  //     res.send(redisResult)
+  //   }
+  // });
 });
 
 app.get('*.js', (req, res, next) => {
