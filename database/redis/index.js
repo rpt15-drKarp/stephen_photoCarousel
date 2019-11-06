@@ -7,9 +7,9 @@ client.on('error', function(err){
 });
 
 // write to redis
-let postOneRedis = (key, value) => {
-  client.set(key, value, redis.print);
-}
+let postOneRedis = (key, value, callback) => {
+  client.set(key, value);
+};
 
 // retrieve from redis
 let getOneRedis = (key, callback) => {
@@ -20,7 +20,7 @@ let getOneRedis = (key, callback) => {
       callback(null, result);
     }
   })
-}
+};
 
 // client.set('my test key', 'my test value', redis.print);
 // client.get('my test key', function(error, result) {
