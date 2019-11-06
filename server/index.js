@@ -67,7 +67,7 @@ app.get('/api/images/:gameId/', (req, res) => {
     res.send('loaderio-4ec099633c4b6110bd51cbcb43dbcc48')
   } else {
     // if data is in redis
-    redisApis.getOneRedis(gameId, (err, result) => {
+    redisApis.getOneRedis(gameId, (err, redisResult) => {
       // if data is NOT in redis
       if (err) {
         if (envDb === 'mongo') {
@@ -95,7 +95,7 @@ app.get('/api/images/:gameId/', (req, res) => {
         }
 
       } else {
-        res.send(result)
+        res.send(redisResult)
       }
     });
 
