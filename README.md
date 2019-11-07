@@ -376,10 +376,10 @@ Solution: Using incorrect ec2 DNS. I was using the DNS for my service rather tha
 #### Benchmark
 | DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- | ---------- |
-| MySQL     | GET   | 1    | 105ms | 60rpm | 0.00% |
-| MySQL     | GET   | 10   | 94ms | 600rpm | 0.00% |
-| MySQL     | GET   | 100  | 120ms | 6,000rpm | 0.00% |
-| MySQL     | GET   | 1000 | 124ms | 60,000rpm | 0.00% |
+| MySQL     | GET   | 1    | 68ms | 60rpm | 0.00% |
+| MySQL     | GET   | 10   | 67ms | 600rpm | 0.00% |
+| MySQL     | GET   | 100  | 64ms | 6,000rpm | 0.00% |
+| MySQL     | GET   | 1000 | 4215ms | 15,798rpm | 0.00% |
 | MySQL     | POST  | 1    | 81ms | 60rpm | 0.00% |
 | MySQL     | POST  | 10   | 65ms | 600rpm | 0.00% |
 | MySQL     | POST  | 100  | 63ms | 6,000rpm | 0.00% |
