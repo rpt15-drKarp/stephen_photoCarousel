@@ -63,7 +63,7 @@ app.get('/api/overviewImage/:gameId', (req, res) => {
     res.send('http://lorempixel.com/689/387/food/')
   }
 });
-/*
+
 // using redis
 app.get('/api/images/:gameId/', (req, res) => {
   const game_name = req.params.game_name;
@@ -102,8 +102,9 @@ app.get('/api/images/:gameId/', (req, res) => {
     }
     });
 });
-*/
 
+
+/*
 // not using redis
 app.get('/api/images/:gameId/', (req, res) => {
   const game_name = req.params.game_name;
@@ -135,6 +136,7 @@ app.get('/api/images/:gameId/', (req, res) => {
     });
   }
 });
+*/
 
 app.get('*.js', (req, res, next) => {
   req.url = req.url + '.gz';

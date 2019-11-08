@@ -18,14 +18,14 @@ let images = {
 module.exports = {
   getOne: (gameId, callback) => {
     if (envDb === 'mySql') {
-      let queryString = `SELECT * FROM games WHERE game_id = ${gameId}`;
+      let queryString = `SELECT * FROM games WHERE game_Id = ${gameId}`;
       dbM.pool.query(queryString, function(err, results) {
-        if (err) {
-          throw err;
-        } else {
-          // console.log('RESULTS --->', results);
-          callback(null, results);
-        }
+          if (err) {
+            throw err;
+          } else {
+            // console.log('RESULTS --->', results);
+            callback(null, results);
+          }
       });
     } else if (envDb === 'cassandra') {
       let queryString = `SELECT * FROM photo_carousel.games WHERE game_id = ${gameId}`;
