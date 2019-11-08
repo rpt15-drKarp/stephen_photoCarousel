@@ -16,24 +16,17 @@ let images = {
 };
 
 module.exports = {
-  getOne: async (gameId, callback) => {
+  getOne: (gameId, callback) => {
     if (envDb === 'mySql') {
-      let queryString = `SELECT * FROM games WHERE game_id = ${gameId}`;
-      try {
-        await dbM.pool.query(queryString, function(err, results) {
+      let queryString = `SELECT * FROM games WHERE game_Id = ${gameId}`;
+      dbM.pool.query(queryString, function(err, results) {
           if (err) {
             throw err;
           } else {
             // console.log('RESULTS --->', results);
             callback(null, results);
           }
-        })
-        .catch ((err) => {
-          console.log('error in getOne:', err);
-        });
-      } catch (error) {
-        console.log('error in catch:', error);
-      }
+      });
     } else if (envDb === 'cassandra') {
       let queryString = `SELECT * FROM photo_carousel.games WHERE game_id = ${gameId}`;
 
