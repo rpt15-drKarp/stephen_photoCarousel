@@ -30,6 +30,9 @@
      - [3.6.1 Deployment Benchmarking](#361-deployment-benchmarking)
    - [3.7 Optimization](#37-optimization)
      - [3.7.1 Server Side Rendering](#371-server-side-rendering)
+     - [3.7.2 Redis Cache](#372-redis-cache)
+     - [3.7.3 MySQL Partitions](#373-mysql-partitions)
+     - [3.7.4 Load Balancer](#374-load-balancer)
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
@@ -493,9 +496,11 @@ logfile '' -> logfile /etc/redis/redis_log
 | DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- | ---------- |
 | MySQL     | GET   | 1000    | 2156ms | 22970rpm | 0% |
-| MySQL     | GET   | 2000    | 4711ms | 19618rpm | 5.3% |
+| MySQL     | GET   | 2000    | 8804ms | 16102rpm | 24.2% |
 | MySQL     | GET   | 5000   | 8757ms | 3548rpm | ERROR OUT |
 | MySQL     | GET   | 10000  | 9738ms | 2188rpm | ERROR OUT |
+
+1000 RPS performed better with partitions but 2000 performed worse.
 
 
 Add partitions to existing table
@@ -508,3 +513,13 @@ Query to see partitions
 
 Query example to select rows from specific partition
 `SELECT * FROM games WHERE game_id BETWEEN '1' AND '999999';`
+
+### 3.7.4 Load Balancer
+#### Benchmark after Load Balancer
+| DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
+| --------- | ----- | ---- | ------- | ---------- | ---------- |
+| MySQL     | GET   | 1000    | ms | 0rpm | 0% |
+| MySQL     | GET   | 2000    | ms | 0rpm | 5.3% |
+| MySQL     | GET   | 5000   | n/a | n/a | ERROR OUT |
+| MySQL     | GET   | 10000  | n/a | n/a | ERROR OUT |
+
