@@ -18,7 +18,7 @@ let images = {
 module.exports = {
   getOne: (gameId, callback) => {
     if (envDb === 'mySql') {
-      let queryString = `SELECT * FROM games WHERE game_Id = ${gameId}`;
+      let queryString = `SELECT * FROM games WHERE game_Id BETWEEN '${gameId}' AND '${gameId}'`;
       dbM.pool.query(queryString, function(err, results) {
           if (err) {
             throw err;

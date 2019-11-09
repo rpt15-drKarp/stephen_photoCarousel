@@ -475,6 +475,15 @@ logfile '' -> logfile /etc/redis/redis_log
 
 
 ### 3.7.3 MySQL Partitions
+#### Benchmark after MySQL Partitions
+| DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
+| --------- | ----- | ---- | ------- | ---------- | ---------- |
+| MySQL     | GET   | 1000    | 2156ms | 22970rpm | 0% |
+| MySQL     | GET   | 2000    | 4711ms | 19618rpm | 5.3% |
+| MySQL     | GET   | 5000   | 8757ms | 3548rpm | ERROR OUT |
+| MySQL     | GET   | 10000  | 9738ms | 2188rpm | ERROR OUT |
+
+
 Add partitions to existing table
 ```
 ALTER TABLE games PARTITION BY RANGE (game_id) (PARTITION p0 VALUES LESS THAN (1000000),PARTITION p1 VALUES LESS THAN (2000000), PARTITION p2 VALUES LESS THAN (3000000), PARTITION p3 VALUES LESS THAN (4000000), PARTITION p4 VALUES LESS THAN (5000000), PARTITION p5 VALUES LESS THAN (6000000), PARTITION p6 VALUES LESS THAN (7000000), PARTITION p7 VALUES LESS THAN (8000000), PARTITION p8 VALUES LESS THAN (9000000), PARTITION p9 VALUES LESS THAN (10000000), PARTITION p10 VALUES LESS THAN (11000000));
@@ -482,3 +491,6 @@ ALTER TABLE games PARTITION BY RANGE (game_id) (PARTITION p0 VALUES LESS THAN (1
 
 Query to see partitions
 `SELECT * FROM information_schema.partitions WHERE table_name = 'games';`
+
+Query example to select rows from specific partition
+`SELECT * FROM games WHERE game_id BETWEEN '1' AND '999999';`
