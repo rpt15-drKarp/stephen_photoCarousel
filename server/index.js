@@ -9,7 +9,11 @@ const dbApis = require('../database/models/APIs.js');
 const redis = require('redis');
 const config = require('../config.js');
 
-let redisClient = redis.createClient(6379, config.redis);
+
+let redisClient = redis.createClient({
+  port: 6379,
+  host: config.redis
+});
 
 redisClient.on('error', function(err){
   console.log('Error connecting to redis:', err)
@@ -75,7 +79,6 @@ app.get('/api/images/:gameId/', (req, res) => {
   request(`${config.servers[storeIndex]}/api/images/${gameId}`).on('error', () => {
     res.end();
   }).pipe(res);
-
 })
 
 /*
