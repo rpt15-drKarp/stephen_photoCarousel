@@ -257,6 +257,20 @@ try {
 }
 ```
 
+**Third Issue**
+My server was unable to connect to mysql server.
+
+**ANSWER!**
+After I upgraded MySQL, I didn't turn the server back on so I had to use `sudo service mysqld start` to start it.
+
+**Fourth Issue**
+My version of MySQL (5.5) was unable to use the PARTITION keyword so I had to upgrade my mySQL server with the following code:
+```
+yum remove mysql55-libs
+yum remove mysql55-server
+yum install mysql56-server
+```
+
 ### 3.3.2 Cassandra Setup
 **Errors**
 - #### CQLSH Connection Error ('Unable to connect to any servers')
