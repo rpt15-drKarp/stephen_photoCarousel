@@ -386,10 +386,10 @@ Solution: Using incorrect ec2 DNS. I was using the DNS for my service rather tha
 | MySQL     | POST  | 1000 | 69ms | 60,000rpm | 0.00% |
 
 ### 3.7 Optimization
-
 ### Original Benchmark for > 1000 RPS
 | DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- | ---------- |
+| MySQL     | GET   | 1000    | 4215ms | 9487rpm | 49.22% |
 | MySQL     | GET   | 2000    | 7521ms | 9487rpm | 49.22% |
 | MySQL     | GET   | 5000   | 8757ms | 3548rpm | 62.16% |
 | MySQL     | GET   | 10000  | 9738ms | 2188rpm | 85.57% |
@@ -414,6 +414,15 @@ Once I changed my server to perform server side rendering, my stylesheet stopped
 Attempted to use react-router to get the URL from the client but that did not work. Seems like this method was getting the path of the file that requested it rather than the web page url.
 
 ### 3.7.2 Redis Cache
+#### Benchmark after Redis
+| DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
+| --------- | ----- | ---- | ------- | ---------- | ---------- |
+| MySQL     | GET   | 1000    | 2156ms | 22970rpm | 0% |
+| MySQL     | GET   | 2000    | 4711ms | 19618rpm | 5.3% |
+| MySQL     | GET   | 5000   | 8757ms | 3548rpm | ERROR OUT |
+| MySQL     | GET   | 10000  | 9738ms | 2188rpm | ERROR OUT |
+
+
 Redis is an in-memory data structure store and it supports both LRU (Least Recently Used) and LFU (Least Frequently Used) eviction policies. I am using this as one of my optimization strategies because it'll be faster to get data from memeory (when applicable) than always making a call to the database.
 
 I will be using the allkeys-lru policy because with an app like Steam, I expect that certain games will be more popular than others and that popularity will continually change through the years. With that being the case, it makes more sense to always keep the the recent popular items in memory.
@@ -463,3 +472,13 @@ logfile '' -> logfile /etc/redis/redis_log
 
 7. Check if Redis is working
 `redis-cli ping`
+
+
+### 3.7.3 MySQL Partitions
+Add partitions to existing table
+```
+ALTER TABLE games PARTITION BY RANGE (game_id) (PARTITION p0 VALUES LESS THAN (1000000),PARTITION p1 VALUES LESS THAN (2000000), PARTITION p2 VALUES LESS THAN (3000000), PARTITION p3 VALUES LESS THAN (4000000), PARTITION p4 VALUES LESS THAN (5000000), PARTITION p5 VALUES LESS THAN (6000000), PARTITION p6 VALUES LESS THAN (7000000), PARTITION p7 VALUES LESS THAN (8000000), PARTITION p8 VALUES LESS THAN (9000000), PARTITION p9 VALUES LESS THAN (10000000), PARTITION p10 VALUES LESS THAN (11000000));
+```
+
+Query to see partitions
+`SELECT * FROM information_schema.partitions WHERE table_name = 'games';`
