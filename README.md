@@ -481,7 +481,7 @@ protected-mode yes -> protected-mode no
 pidfile /var/run/redis.pid -> pidfile /etc/redis/redis.pid
 logfile '' -> logfile /etc/redis/redis_log
 #maxmemory <bytes> -> maxmemory 700
-#maxmemory-policy noeviction -> maxmemory-policy allkeys-lru
+#maxmemory-policy noeviction -> maxmemory-policy allkeys-lfu
 ```
 
 6. Start the server:
@@ -500,8 +500,7 @@ logfile '' -> logfile /etc/redis/redis_log
 | MySQL     | GET   | 5000   | 8757ms | 3548rpm | ERROR OUT |
 | MySQL     | GET   | 10000  | 9738ms | 2188rpm | ERROR OUT |
 
-1000 RPS performed better with partitions but 2000 performed worse.
-
+1000 RPS performed similar with partitions but 2000 performed worse.
 
 Add partitions to existing table
 ```
@@ -519,7 +518,7 @@ Query example to select rows from specific partition
 | DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- | ---------- |
 | MySQL     | GET   | 1000    | ms | 0rpm | 0% |
-| MySQL     | GET   | 2000    | ms | 0rpm | 5.3% |
+| MySQL     | GET   | 2000    | ms | 0rpm | 0% |
 | MySQL     | GET   | 5000   | n/a | n/a | ERROR OUT |
 | MySQL     | GET   | 10000  | n/a | n/a | ERROR OUT |
 
