@@ -7,6 +7,7 @@ const cors = require('cors');
 const compression = require('compression');
 const dbApis = require('../database/models/APIs.js');
 const redis = require('redis');
+const config = require('../config.js');
 
 let redisClient = redis.createClient(6379);
 
@@ -86,7 +87,7 @@ app.get('/api/images/:gameId/', (req, res) => {
         // query mysql
         dbApis.getOne(gameId, (err, dbResult) => {
           if (err) {
-            throw err;
+            console.log('error in server get:', err);
           } else {
             // console.log('successfully got game data', result);
             // add data to redis
@@ -94,9 +95,11 @@ app.get('/api/images/:gameId/', (req, res) => {
             // return data
             res.send(dbResult);
           }
-        });
+        })
+        // .catch((e) => {
+        //   console.log('error in server catch:', e);
+        // });
       }
-
     } else {
       res.send(redisResult)
     }

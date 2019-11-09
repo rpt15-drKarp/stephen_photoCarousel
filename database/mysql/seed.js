@@ -42,12 +42,10 @@ const seedData = async (numOfData) => {
           globalCounter += 50;
           // console.log('globalCounter', globalCounter);
           // console.log('success');
-        })
-        .catch ((err) => {
-          console.log('error in catch await:', err);
         });
       } catch (error) {
         console.log('error in catch:', error);
+        throw error;
       }
     }
     }
