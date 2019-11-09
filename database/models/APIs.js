@@ -18,7 +18,32 @@ let images = {
 module.exports = {
   getOne: (gameId, callback) => {
     if (envDb === 'mySql') {
-      let queryString = `SELECT * FROM games WHERE game_Id BETWEEN '${gameId}' AND '${gameId}'`;
+      let partition = '';
+      if (gameId < 1000000) {
+        partition = 'p0';
+      } else if (gameId < 2000000) {
+        partition = 'p1';
+      } else if (gameId < 3000000) {
+        partition = 'p2';
+      } else if (gameId < 4000000) {
+        partition = 'p3';
+      } else if (gameId < 5000000) {
+        partition = 'p4';
+      } else if (gameId < 6000000) {
+        partition = 'p5';
+      } else if (gameId < 7000000) {
+        partition = 'p6';
+      } else if (gameId < 8000000) {
+        partition = 'p7';
+      } else if (gameId < 9000000) {
+        partition = 'p8';
+      } else if (gameId < 10000000) {
+        partition = 'p9';
+      } else if (gameId < 11000000) {
+        partition = 'p10';
+      }
+
+      let queryString = `SELECT * FROM games PARTITION (${partition}) WHERE game_id = '${gameId}'`;
       dbM.pool.query(queryString, function(err, results) {
           if (err) {
             throw err;
