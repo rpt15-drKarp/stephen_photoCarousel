@@ -485,10 +485,25 @@ logfile '' -> logfile /etc/redis/redis_log
 ```
 
 6. Start the server:
- `redis-server`
+ `redis-server /etc/redis/redis.conf`
 
 7. Check if Redis is working
 `redis-cli ping`
+
+#### Set up redis on separate instance
+##### Obstacles
+**Error connecting to redis: ReplyError: Ready check failed: DENIED Redis is running in protected mode because protected mode is enabled, no bind address was specified, no authentication password is requested to clients.**
+I tried to disable protected mode in the config file and restart the server (`redis-cli shutdown`) but I received another error message saying that there are errors trying to shutdown.
+
+**Resolution**
+I was able to shutdown the server by using:
+`redis-cli shutdown nosave`
+
+I then re-started the server
+`redis-server /etc/redis/redis.conf`
+
+In order to check if the config file loaded, you can use
+`redis-cli -p 6379 info server`
 
 
 ### 3.7.3 MySQL Partitions
