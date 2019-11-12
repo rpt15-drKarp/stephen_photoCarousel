@@ -30,6 +30,9 @@
      - [3.6.1 Deployment Benchmarking](#361-deployment-benchmarking)
    - [3.7 Optimization](#37-optimization)
      - [3.7.1 Server Side Rendering](#371-server-side-rendering)
+     - [3.7.2 Redis Cache](#372-redis-cache)
+     - [3.7.3 MySQL Partitions](#373-mysql-partitions)
+     - [3.7.4 Load Balancer](#374-load-balancer)
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
@@ -271,6 +274,16 @@ yum remove mysql55-server
 yum install mysql56-server
 ```
 
+**Fifth Issue**
+I had to recreate my mySQL server instance and I was running into an issue with user privileges so I had to run the following code to grant my app permission to access the mysql database.
+```
+CREATE USER 'sdc'@'ec2-54-193-107-57.us-west-1.compute.amazonaws.com' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'sdc'@'ec2-54-193-107-57.us-west-1.compute.amazonaws.com' WITH GRANT OPTION;
+CREATE USER 'sdc'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'sdc'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+```
+
 ### 3.3.2 Cassandra Setup
 **Errors**
 - #### CQLSH Connection Error ('Unable to connect to any servers')
@@ -478,14 +491,37 @@ protected-mode yes -> protected-mode no
 pidfile /var/run/redis.pid -> pidfile /etc/redis/redis.pid
 logfile '' -> logfile /etc/redis/redis_log
 #maxmemory <bytes> -> maxmemory 700
-#maxmemory-policy noeviction -> maxmemory-policy allkeys-lru
+#maxmemory-policy noeviction -> maxmemory-policy allkeys-lfu
 ```
 
 6. Start the server:
- `redis-server`
+ `redis-server /etc/redis/redis.conf`
 
 7. Check if Redis is working
 `redis-cli ping`
+
+#### Set up redis on separate instance
+##### Obstacles
+**Error connecting to redis: ReplyError: Ready check failed: DENIED Redis is running in protected mode because protected mode is enabled, no bind address was specified, no authentication password is requested to clients.**
+I tried to disable protected mode in the config file and restart the server (`redis-cli shutdown`) but I received another error message saying that there are errors trying to shutdown.
+
+**Resolution**
+I was able to shutdown the server by using:
+`redis-cli shutdown nosave`
+
+I then re-started the server
+`redis-server /etc/redis/redis.conf`
+
+In order to check if the config file loaded, you can use
+`redis-cli -p 6379 info server`
+
+#### Benchmark after adding Redis on separate instance
+| DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
+| --------- | ----- | ---- | ------- | ---------- | ---------- |
+| MySQL     | GET   | 1000    | 4510ms | 18952rpm | 0% |
+| MySQL     | GET   | 2000    | 9205ms | 15475rpm | 18.8% |
+| MySQL     | GET   | 5000   | n/a | n/a | ERROR OUT |
+| MySQL     | GET   | 10000  | n/a | n/a | ERROR OUT |
 
 
 ### 3.7.3 MySQL Partitions
@@ -493,10 +529,11 @@ logfile '' -> logfile /etc/redis/redis_log
 | DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- | ---------- |
 | MySQL     | GET   | 1000    | 2156ms | 22970rpm | 0% |
-| MySQL     | GET   | 2000    | 4711ms | 19618rpm | 5.3% |
+| MySQL     | GET   | 2000    | 8804ms | 16102rpm | 24.2% |
 | MySQL     | GET   | 5000   | 8757ms | 3548rpm | ERROR OUT |
 | MySQL     | GET   | 10000  | 9738ms | 2188rpm | ERROR OUT |
 
+1000 RPS performed similar with partitions but 2000 performed worse.
 
 Add partitions to existing table
 ```
@@ -508,3 +545,17 @@ Query to see partitions
 
 Query example to select rows from specific partition
 `SELECT * FROM games WHERE game_id BETWEEN '1' AND '999999';`
+
+### 3.7.4 Load Balancer
+#### Benchmark after Load Balancer
+| DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
+| --------- | ----- | ---- | ------- | ---------- | ---------- |
+| MySQL     | GET   | 1000    | ms | 0rpm | 0% |
+| MySQL     | GET   | 2000    | ms | 0rpm | 0% |
+| MySQL     | GET   | 5000   | n/a | n/a | ERROR OUT |
+| MySQL     | GET   | 10000  | n/a | n/a | ERROR OUT |
+
+Steps to launch load balancer:
+1. Start new EC2 instances
+2. Update config.js file with the public DNS
+3. Update port numbers on each of the instances to be 3100, 3101, 3012, ...etc

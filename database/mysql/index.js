@@ -8,7 +8,7 @@ console.log('mysql host:', dbEnv);
 
 const pool = mysql.createPool({
   host     : dbEnv,
-  user     : 'root',
+  user     : 'sdc',
   password : 'password',
   database: 'photoCarousel'
 });

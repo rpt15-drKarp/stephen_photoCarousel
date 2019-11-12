@@ -9,7 +9,11 @@ const dbApis = require('../database/models/APIs.js');
 const redis = require('redis');
 const config = require('../config.js');
 
-let redisClient = redis.createClient(6379);
+
+let redisClient = redis.createClient({
+  port: 6379,
+  host: config.redis
+});
 
 redisClient.on('error', function(err){
   console.log('Error connecting to redis:', err)
@@ -65,10 +69,23 @@ app.get('/api/overviewImage/:gameId', (req, res) => {
   }
 });
 
+// load balancer
+app.get('/api/images/:gameId/', (req, res) => {
+  let gameId = req.params.gameId;
+  let storeIndex = 0;
+  if (storeIndex === config.servers.length - 1) {
+    storeIndex = 0;
+  }
+  request(`${config.servers[storeIndex]}/api/images/${gameId}`).on('error', () => {
+    res.end();
+  }).pipe(res);
+})
+
+/*
 // using redis
 app.get('/api/images/:gameId/', (req, res) => {
   const game_name = req.params.game_name;
-  const gameId = req.params.gameId;
+  let gameId = req.params.gameId;
   // console.log('gameId', gameId);
 
   redisClient.get(gameId, (err, redisResult) => {
@@ -79,7 +96,6 @@ app.get('/api/images/:gameId/', (req, res) => {
           if (err) {
             console.error(err);
           } else {
-            // const imageUrl = results.imageUrl;
             res.json(results);
           }
         });
@@ -89,7 +105,6 @@ app.get('/api/images/:gameId/', (req, res) => {
           if (err) {
             console.log('error in server get:', err);
           } else {
-            // console.log('successfully got game data', result);
             // add data to redis
             redisClient.set(gameId, JSON.stringify(dbResult), redis.print);
             // return data
@@ -105,6 +120,7 @@ app.get('/api/images/:gameId/', (req, res) => {
     }
     });
 });
+*/
 
 
 /*
