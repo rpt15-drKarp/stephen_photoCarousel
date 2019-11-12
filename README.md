@@ -274,6 +274,16 @@ yum remove mysql55-server
 yum install mysql56-server
 ```
 
+**Fifth Issue**
+I had to recreate my mySQL server instance and I was running into an issue with user privileges so I had to run the following code to grant my app permission to access the mysql database.
+```
+CREATE USER 'sdc'@'ec2-54-193-107-57.us-west-1.compute.amazonaws.com' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'sdc'@'ec2-54-193-107-57.us-west-1.compute.amazonaws.com' WITH GRANT OPTION;
+CREATE USER 'sdc'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'sdc'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+```
+
 ### 3.3.2 Cassandra Setup
 **Errors**
 - #### CQLSH Connection Error ('Unable to connect to any servers')
@@ -504,6 +514,14 @@ I then re-started the server
 
 In order to check if the config file loaded, you can use
 `redis-cli -p 6379 info server`
+
+#### Benchmark after adding Redis on separate instance
+| DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
+| --------- | ----- | ---- | ------- | ---------- | ---------- |
+| MySQL     | GET   | 1000    | 4510ms | 18952rpm | 0% |
+| MySQL     | GET   | 2000    | 9205ms | 15475rpm | 18.8% |
+| MySQL     | GET   | 5000   | n/a | n/a | ERROR OUT |
+| MySQL     | GET   | 10000  | n/a | n/a | ERROR OUT |
 
 
 ### 3.7.3 MySQL Partitions
