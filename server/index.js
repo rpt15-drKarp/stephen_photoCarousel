@@ -1,6 +1,7 @@
 const rewrelic = require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
+const request = require('request');
 const Images = require('../database/Image.js');
 const db = require('../database/Image.js');
 const cors = require('cors');

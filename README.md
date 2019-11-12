@@ -559,3 +559,7 @@ Steps to launch load balancer:
 1. Start new EC2 instances
 2. Update config.js file with the public DNS
 3. Update port numbers on each of the instances to be 3100, 3101, 3012, ...etc
+4. Comment out load balancer code
+5. Uncomment out redis code
+
+I created my own load balancing code in the server by using the http request method. My code will loop through the available additional servers which will be listed as an array in the config file and continually loop through that array every time an api call is made. So if there are 3 elements in the array, the first API call will go to the first endpoint, the second will go to the second, the third will go to the third, and the fourth will start on the first again.
