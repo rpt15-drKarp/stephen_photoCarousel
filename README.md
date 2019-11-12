@@ -555,3 +555,7 @@ Query example to select rows from specific partition
 | MySQL     | GET   | 5000   | n/a | n/a | ERROR OUT |
 | MySQL     | GET   | 10000  | n/a | n/a | ERROR OUT |
 
+Steps to launch load balancer:
+1. Start new EC2 instances
+2. Update config.js file with the public DNS
+3. Update port numbers on each of the instances to be 3100, 3101, 3012, ...etc
