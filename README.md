@@ -563,3 +563,6 @@ Steps to launch load balancer:
 5. Uncomment out redis code
 
 I created my own load balancing code in the server by using the http request method. My code will loop through the available additional servers which will be listed as an array in the config file and continually loop through that array every time an api call is made. So if there are 3 elements in the array, the first API call will go to the first endpoint, the second will go to the second, the third will go to the third, and the fourth will start on the first again.
+
+##### Obstacles
+**Error: Invalid protocol: ec2-13-56-149-165.us-west-1.compute.amazonaws.com**

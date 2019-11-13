@@ -77,9 +77,12 @@ app.get('/api/images/:gameId/', (req, res) => {
   if (storeIndex === config.servers.length - 1) {
     storeIndex = 0;
   }
-  request(`${config.servers[storeIndex]}/api/images/${gameId}`).on('error', () => {
-    res.end();
-  }).pipe(res);
+  request
+    .get(`${config.servers[storeIndex]}/api/images/${gameId}`)
+    .on('error', () => {
+      res.end();
+    })
+    .pipe(res);
 })
 
 /*
