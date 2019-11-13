@@ -69,14 +69,17 @@ app.get('/api/overviewImage/:gameId', (req, res) => {
     res.send('http://lorempixel.com/689/387/food/')
   }
 });
-
+let storeIndex = 0;
 // load balancer
 app.get('/api/images/:gameId/', (req, res) => {
   let gameId = req.params.gameId;
-  let storeIndex = 0;
+
   if (storeIndex === config.servers.length - 1) {
     storeIndex = 0;
+  } else {
+    storeIndex++;
   }
+  
   request
     .get(`${config.servers[storeIndex]}/api/images/${gameId}`)
     .on('error', () => {
