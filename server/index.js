@@ -79,13 +79,17 @@ app.get('/api/images/:gameId/', (req, res) => {
   } else {
     storeIndex++;
   }
-  
-  request
-    .get(`${config.servers[storeIndex]}/api/images/${gameId}`)
-    .on('error', () => {
-      res.end();
+
+  let _req = request({url: `${config.servers[storeIndex]}/api/images/${gameId}`})
+    .on('error', (err) => {
+      res.status(500);
+      console.log('error in loadbalancer request:', err);
     })
-    .pipe(res);
+    .on('response', (response) => {
+      console.log('response from loadbalancer request:', response);
+    });
+
+  req.pipe(_req).pipe(res);
 })
 
 /*
