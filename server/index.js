@@ -106,19 +106,20 @@ app.get('/api/images/:gameId/', (req, res) => {
         });
       } else {
         // query mysql
-        dbApis.getOne(gameId, (err, dbResult) => {
-          if (err) {
-            console.log('error in server get:', err);
-          } else {
-            // add data to redis
-            redisClient.set(gameId, JSON.stringify(dbResult), redis.print);
-            // return data
-            res.send(dbResult);
-          }
-        })
-        // .catch((e) => {
-        //   console.log('error in server catch:', e);
-        // });
+        try {
+          dbApis.getOne(gameId, (err, dbResult) => {
+            if (err) {
+              console.log('error in server get:', err);
+            } else {
+              // add data to redis
+              redisClient.set(gameId, JSON.stringify(dbResult), redis.print);
+              // return data
+              res.send(dbResult);
+            }
+          });
+       } catch(err) {
+         next(err);
+       }
       }
     } else {
       res.send(redisResult)
@@ -126,7 +127,6 @@ app.get('/api/images/:gameId/', (req, res) => {
     });
 });
 */
-
 
 /*
 // not using redis
@@ -147,20 +147,25 @@ app.get('/api/images/:gameId/', (req, res) => {
     });
   } else {
     // query mysql
-    dbApis.getOne(gameId, (err, dbResult) => {
-      if (err) {
-        throw err;
-      } else {
-        // console.log('successfully got game data', result);
-        // add data to redis
-        redisClient.set(gameId, JSON.stringify(dbResult), redis.print);
-        // return data
-        res.send(dbResult);
-      }
-    });
+    try {
+      dbApis.getOne(gameId, (err, dbResult) => {
+        if (err) {
+          throw err;
+        } else {
+          // console.log('successfully got game data', result);
+          // add data to redis
+          redisClient.set(gameId, JSON.stringify(dbResult), redis.print);
+          // return data
+          res.send(dbResult);
+        }
+      });
+    } catch (err) {
+      next(err);
+    }
   }
 });
 */
+
 
 app.get('*.js', (req, res, next) => {
   req.url = req.url + '.gz';

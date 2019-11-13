@@ -44,6 +44,7 @@ module.exports = {
       }
 
       let queryString = `SELECT * FROM games PARTITION (${partition}) WHERE game_id = '${gameId}'`;
+      // let queryString = `SELECT * FROM games WHERE game_id = '${gameId}'`;
 
       dbM.pool.query(queryString, function(err, results) {
           if (err) {
