@@ -559,3 +559,14 @@ Steps to launch load balancer:
 1. Start new EC2 instances
 2. Update config.js file with the public DNS
 3. Update port numbers on each of the instances to be 3100, 3101, 3012, ...etc
+4. Comment out load balancer code
+5. Uncomment out redis code
+
+I created my own load balancing code in the server by using the http request method. My code will loop through the available additional servers which will be listed as an array in the config file and continually loop through that array every time an api call is made. So if there are 3 elements in the array, the first API call will go to the first endpoint, the second will go to the second, the third will go to the third, and the fourth will start on the first again.
+
+##### Obstacles
+**Error: Invalid protocol: ec2-13-56-149-165.us-west-1.compute.amazonaws.com**
+**Resolution**
+My EC2 instances for the extra servers were using different ports and my security group wasn't allowing for those different ports. So I had to change that but in addition, in my config file, I forgot to include http:// at the beginning and the port number at the end.
+
+**FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory**

@@ -1,12 +1,13 @@
 const rewrelic = require('newrelic');
 const express = require('express');
 const bodyParser = require('body-parser');
-const Images = require('../database/Image.js');
-const db = require('../database/Image.js');
+const request = require('request');
 const cors = require('cors');
 const compression = require('compression');
-const dbApis = require('../database/models/APIs.js');
 const redis = require('redis');
+const dbApis = require('../database/models/APIs.js');
+const db = require('../database/Image.js');
+const Images = require('../database/Image.js');
 const config = require('../config.js');
 
 
@@ -70,15 +71,19 @@ app.get('/api/overviewImage/:gameId', (req, res) => {
 });
 
 // load balancer
+let cur = 0;
 app.get('/api/images/:gameId/', (req, res) => {
   let gameId = req.params.gameId;
-  let storeIndex = 0;
-  if (storeIndex === config.servers.length - 1) {
-    storeIndex = 0;
-  }
-  request(`${config.servers[storeIndex]}/api/images/${gameId}`).on('error', () => {
-    res.end();
-  }).pipe(res);
+
+  // console.log('req.url for loadBalancer:', req.url);
+  // console.log(`${config.servers[cur]}${req.url}`);
+  const _req = request({ url: `${config.servers[cur]}${req.url}` })
+    .on('error', (error) => {
+      console.log('error in request:', error);
+      res.status(500).send(error.message);
+    });
+    req.pipe(_req).pipe(res);
+  cur = (cur + 1) % config.servers.length;
 })
 
 /*
