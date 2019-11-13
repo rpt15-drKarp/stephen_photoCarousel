@@ -569,4 +569,4 @@ I created my own load balancing code in the server by using the http request met
 **Resolution**
 My EC2 instances for the extra servers were using different ports and my security group wasn't allowing for those different ports. So I had to change that but in addition, in my config file, I forgot to include http:// at the beginning and the port number at the end.
 
-**Error: socket hang up**
+**FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory**
