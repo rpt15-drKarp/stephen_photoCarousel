@@ -88,7 +88,7 @@ app.get('/api/images/:gameId/', (req, res) => {
 })
 */
 
-/*
+
 // using redis
 app.get('/api/images/:gameId/', (req, res) => {
   const game_name = req.params.game_name;
@@ -128,7 +128,7 @@ app.get('/api/images/:gameId/', (req, res) => {
     }
     });
 });
-*/
+
 
 /*
 // not using redis
