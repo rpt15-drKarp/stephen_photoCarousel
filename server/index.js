@@ -91,9 +91,11 @@ app.get('/api/images/:gameId/', (req, res) => {
   //   });
 
   // req.pipe(_req).pipe(res);
-  console.log('req.url for loadBalancer:', req.url);
-  const _req = request({ url: `${config.servers[storeIndex]}/api/images/${gameId}/${req.url}` })
+  // console.log('req.url for loadBalancer:', req.url);
+  // console.log('url in request:', config.servers[cur] + req.url);
+  const _req = request({ url: `${config.servers[cur]}${req.url}` })
     .on('error', (error) => {
+      console.log('error in request:', error);
       res.status(500).send(error.message);
     });
     req.pipe(_req).pipe(res);

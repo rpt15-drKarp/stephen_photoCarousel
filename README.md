@@ -566,3 +566,7 @@ I created my own load balancing code in the server by using the http request met
 
 ##### Obstacles
 **Error: Invalid protocol: ec2-13-56-149-165.us-west-1.compute.amazonaws.com**
+**Resolution**
+My EC2 instances for the extra servers were using different ports and my security group wasn't allowing for those different ports. So I had to change that but in addition, in my config file, I forgot to include http:// at the beginning and the port number at the end.
+
+**Error: socket hang up**

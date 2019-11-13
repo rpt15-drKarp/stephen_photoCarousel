@@ -4,6 +4,8 @@ module.exports = {
   redis: 'ec2-54-219-143-187.us-west-1.compute.amazonaws.com',
   servers: [
     'http://ec2-54-193-81-34.us-west-1.compute.amazonaws.com:3100',
-    'http://ec2-52-53-126-190.us-west-1.compute.amazonaws.com:3101'
+    'http://ec2-52-53-126-190.us-west-1.compute.amazonaws.com:3101',
+    'http://ec2-54-219-164-5.us-west-1.compute.amazonaws.com:3102',
+    'http://ec2-13-56-226-77.us-west-1.compute.amazonaws.com:3103'
   ]
 }
