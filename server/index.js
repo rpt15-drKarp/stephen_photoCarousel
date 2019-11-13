@@ -69,27 +69,35 @@ app.get('/api/overviewImage/:gameId', (req, res) => {
     res.send('http://lorempixel.com/689/387/food/')
   }
 });
-let storeIndex = 0;
 // load balancer
+// let storeIndex = 0;
+let cur = 0;
 app.get('/api/images/:gameId/', (req, res) => {
   let gameId = req.params.gameId;
 
-  if (storeIndex === config.servers.length - 1) {
-    storeIndex = 0;
-  } else {
-    storeIndex++;
-  }
+  // if (storeIndex === config.servers.length - 1) {
+  //   storeIndex = 0;
+  // } else {
+  //   storeIndex++;
+  // }
 
-  let _req = request({url: `${config.servers[storeIndex]}/api/images/${gameId}`})
-    .on('error', (err) => {
-      res.status(500);
-      console.log('error in loadbalancer request:', err);
-    })
-    .on('response', (response) => {
-      console.log('response from loadbalancer request:', response);
+  // let _req = request({url: `${config.servers[storeIndex]}/api/images/${gameId}`})
+  //   .on('error', (err) => {
+  //     res.status(500);
+  //     console.log('error in loadbalancer request:', err);
+  //   })
+  //   .on('response', (response) => {
+  //     console.log('response from loadbalancer request:', response);
+  //   });
+
+  // req.pipe(_req).pipe(res);
+  console.log('req.url for loadBalancer:', req.url);
+  const _req = request({ url: `${config.servers[storeIndex]}/api/images/${gameId}/${req.url}` })
+    .on('error', (error) => {
+      res.status(500).send(error.message);
     });
-
-  req.pipe(_req).pipe(res);
+    req.pipe(_req).pipe(res);
+  cur = (cur + 1) % config.servers.length;
 })
 
 /*
