@@ -70,6 +70,7 @@ app.get('/api/overviewImage/:gameId', (req, res) => {
   }
 });
 
+/*
 // load balancer
 let cur = 0;
 app.get('/api/images/:gameId/', (req, res) => {
@@ -85,6 +86,7 @@ app.get('/api/images/:gameId/', (req, res) => {
     req.pipe(_req).pipe(res);
   cur = (cur + 1) % config.servers.length;
 })
+*/
 
 /*
 // using redis

@@ -416,10 +416,10 @@ Solution: Using incorrect ec2 DNS. I was using the DNS for my service rather tha
 ### Original Benchmark for > 1000 RPS
 | DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
 | --------- | ----- | ---- | ------- | ---------- | ---------- |
-| MySQL     | GET   | 1000    | 4215ms | 9487rpm | 49.22% |
-| MySQL     | GET   | 2000    | 7521ms | 9487rpm | 49.22% |
-| MySQL     | GET   | 5000   | 8757ms | 3548rpm | 62.16% |
-| MySQL     | GET   | 10000  | 9738ms | 2188rpm | 85.57% |
+| MySQL     | GET   | 1000    | 5062ms | 7630rpm | 22.9% |
+| MySQL     | GET   | 2000    | 8968ms | 7702rpm | 43.1% |
+| MySQL     | GET   | 5000   | ms | rpm | ERROR OUT |
+| MySQL     | GET   | 10000  | ms | rpm | ERROR OUT |
 
 ### 3.7.1 Server Side Rendering
 I haven't completed setting up server side rendering yet.
@@ -516,22 +516,33 @@ In order to check if the config file loaded, you can use
 `redis-cli -p 6379 info server`
 
 #### Benchmark after adding Redis on separate instance
-| DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
-| --------- | ----- | ---- | ------- | ---------- | ---------- |
-| MySQL     | GET   | 1000    | 4510ms | 18952rpm | 0% |
-| MySQL     | GET   | 2000    | 9205ms | 15475rpm | 18.8% |
-| MySQL     | GET   | 5000   | n/a | n/a | ERROR OUT |
-| MySQL     | GET   | 10000  | n/a | n/a | ERROR OUT |
-
+| Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
+|-----------------|-------|-------|---------|------------|------------|
+| **Original**        | GET   | 1000  | 5062ms  | 7630rpm    | 22.9%      |
+| Redis           | GET   | 1000  |    4369ms     |     23595rpm       |      0.0%      |
+| **Original**        | GET   | 2000  | 8968ms  | 7702rpm    | 43.1%      |
+| Redis           | GET   | 2000  |    8487ms     |      16717rpm      |      29.3%      |
+| **Original**        | GET   | 5000  | error   | error      | error      |
+| Redis           | GET   | 5000  |     error    |     error       |      error      |
+| **Original**        | GET   | 10000 | error   | error      | error      |
+| Redis           | GET   | 10000 |    error     |     error       |     error       |
 
 ### 3.7.3 MySQL Partitions
 #### Benchmark after MySQL Partitions
-| DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
-| --------- | ----- | ---- | ------- | ---------- | ---------- |
-| MySQL     | GET   | 1000    | 2156ms | 22970rpm | 0% |
-| MySQL     | GET   | 2000    | 8804ms | 16102rpm | 24.2% |
-| MySQL     | GET   | 5000   | 8757ms | 3548rpm | ERROR OUT |
-| MySQL     | GET   | 10000  | 9738ms | 2188rpm | ERROR OUT |
+| Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
+|-----------------|-------|-------|---------|------------|------------|
+| **Original**        | GET   | 1000  | 5062ms  | 7630rpm    | 22.9%      |
+| Redis           | GET   | 1000  |    4365ms     |     23942rpm       |      0.0%      |
+| MySQL Partition | GET   | 1000  |    4369ms     |     23595rpm       |      0.0%      |
+| **Original**        | GET   | 2000  | 8968ms  | 7702rpm    | 43.1%      |
+| Redis           | GET   | 2000  |    8064ms     |      14738rpm      |      37.7%      |
+| MySQL Partition | GET   | 2000  |    8487ms     |      16717rpm      |      29.3%      |
+| **Original**        | GET   | 5000  | error   | error      | error      |
+| Redis           | GET   | 5000  |     error    |     error       |      error      |
+| MySQL Partition | GET   | 5000  |     error    |     error       |      error      |
+| **Original**        | GET   | 10000 | error   | error      | error      |
+| Redis           | GET   | 10000 |     error    |     error       |      error      |
+| MySQL Partition | GET   | 10000 |     error    |     error       |      error      |
 
 1000 RPS performed similar with partitions but 2000 performed worse.
 
