@@ -33,7 +33,7 @@
      - [3.7.2 Redis Cache](#372-redis-cache)
      - [3.7.3 MySQL Partitions](#373-mysql-partitions)
      - [3.7.4 Custom Load Balancer](#374-custom-load-balancer)
-     - [3.7.5 NGINX Load Balancer](#374-nginx-load-balancer)
+     - [3.7.5 NGINX Load Balancer](#375-nginx-load-balancer)
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
