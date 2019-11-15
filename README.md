@@ -558,13 +558,25 @@ Query example to select rows from specific partition
 `SELECT * FROM games WHERE game_id BETWEEN '1' AND '999999';`
 
 ### 3.7.4 Load Balancer
-#### Benchmark after Load Balancer
-| DBMS      | Route | RPS  | LATENCY | THROUGHPUT | ERROR RATE |
-| --------- | ----- | ---- | ------- | ---------- | ---------- |
-| MySQL     | GET   | 1000    | ms | 0rpm | 0% |
-| MySQL     | GET   | 2000    | ms | 0rpm | 0% |
-| MySQL     | GET   | 5000   | n/a | n/a | ERROR OUT |
-| MySQL     | GET   | 10000  | n/a | n/a | ERROR OUT |
+#### Benchmark after Load Balancer - 1st attempt
+| Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
+|-----------------|-------|-------|---------|------------|------------|
+| **Original**        | GET   | 1000  | 5062ms  | 7630rpm    | 22.9%      |
+| Redis           | GET   | 1000  |    4365ms     |     23942rpm       |      0.0%      |
+| MySQL Partition | GET   | 1000  |    4369ms     |     23595rpm       |      0.0%      |
+| Load Balancer   | GET   | 1000  |    4626ms     |     15035rpm       |      11.53%    |
+| **Original**        | GET   | 2000  | 8968ms  | 7702rpm    | 43.1%      |
+| Redis           | GET   | 2000  |    8064ms     |      14738rpm      |      37.7%      |
+| MySQL Partition | GET   | 2000  |    8487ms     |      16717rpm      |      29.3%      |
+| Load Balancer   | GET   | 2000  |    6924ms     |      14657rpm      |      36.6%      |
+| **Original**        | GET   | 5000  | error   | error      | error      |
+| Redis           | GET   | 5000  |     error    |     error       |      error      |
+| MySQL Partition | GET   | 5000  |     error    |     error       |      error      |
+| Load Balancer   | GET   | 5000  |     error    |     error       |      error      |
+| **Original**        | GET   | 10000 | error   | error      | error      |
+| Redis           | GET   | 10000 |     error    |     error       |      error      |
+| MySQL Partition | GET   | 10000 |     error    |     error       |      error      |
+| Load Balancer   | GET   | 10000 |     error    |     error       |      error      |
 
 Steps to launch load balancer:
 1. Start new EC2 instances
@@ -579,5 +591,3 @@ I created my own load balancing code in the server by using the http request met
 **Error: Invalid protocol: ec2-13-56-149-165.us-west-1.compute.amazonaws.com**
 **Resolution**
 My EC2 instances for the extra servers were using different ports and my security group wasn't allowing for those different ports. So I had to change that but in addition, in my config file, I forgot to include http:// at the beginning and the port number at the end.
-
-**FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory**

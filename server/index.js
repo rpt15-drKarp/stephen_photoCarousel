@@ -70,6 +70,18 @@ app.get('/api/overviewImage/:gameId', (req, res) => {
   }
 });
 
+const profilerMiddleware = (req, res, next) => {
+  const start = Date.now();
+  // The 'finish' event comes from core Node.js, it means Node is done handing
+  // off the response headers and body to the underlying OS.
+  res.on('finish', () => {
+    console.log('Completed', req.method, req.url, Date.now() - start);
+  });
+  next();
+};
+
+app.use(profilerMiddleware);
+
 /*
 // load balancer
 let cur = 0;
@@ -85,12 +97,12 @@ app.get('/api/images/:gameId/', (req, res) => {
     });
     req.pipe(_req).pipe(res);
   cur = (cur + 1) % config.servers.length;
-})
+});
 */
 
 
 // using redis
-app.get('/api/images/:gameId/', (req, res) => {
+app.get('/api/images/:gameId/', async (req, res) => {
   const game_name = req.params.game_name;
   let gameId = req.params.gameId;
   // console.log('gameId', gameId);
@@ -132,7 +144,7 @@ app.get('/api/images/:gameId/', (req, res) => {
 
 /*
 // not using redis
-app.get('/api/images/:gameId/', (req, res) => {
+app.get('/api/images/:gameId/', async (req, res) => {
   const game_name = req.params.game_name;
   const gameId = req.params.gameId;
   // console.log('gameId', gameId);
