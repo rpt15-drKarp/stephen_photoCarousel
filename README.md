@@ -733,7 +733,7 @@ After changing MySQL's max connections limit from 151 to 200, the error rate dro
 |-----------------|-------|-------|---------|------------|------------|
 | NGINX (6 servers) | GET   | 5000  |     2370ms    |     177271rpm       |      7.5%%      |
 
-After changing MySQL's max connections limit from 200 to 100, the error rate dropped down to 5.2%
+After changing MySQL's max connections limit from 200 to 100, the error rate dropped down to 0.0%
 
 | Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
 |-----------------|-------|-------|---------|------------|------------|
