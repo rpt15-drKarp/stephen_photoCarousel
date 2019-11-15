@@ -728,11 +728,13 @@ To test that your config is set up correctly
 | NGINX   | GET   | 10000 |     error    |     error       |      error      |
 
 After changing MySQL's max connections limit from 151 to 200, the error rate dropped from the above 15.7% to 7.5%
+
 | Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
 |-----------------|-------|-------|---------|------------|------------|
 | NGINX (6 servers) | GET   | 5000  |     2370ms    |     177271rpm       |      7.5%%      |
 
 After changing MySQL's max connections limit from 200 to 100, the error rate dropped down to 5.2%
+
 | Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
 |-----------------|-------|-------|---------|------------|------------|
 | NGINX (6 servers) | GET   | 5000  |     3382ms    |     145223rpm       |      0%      |
