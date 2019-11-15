@@ -595,33 +595,144 @@ My EC2 instances for the extra servers were using different ports and my securit
 
 
 ### 3.7.5 NGINX Load Balancer
+Steps to install NGINX
+`yum install nginx`
+
+If you get an error message telling you to use amazon extras then use:
+`sudo amazon-linux-extras install nginx1`
+
+Update config file
+`sudo vim /etc/nginx/nginx.conf`
 ```
-sudo amazon-linux-extras install nginx1
+# you must set worker processes based on your CPU cores, nginx does not benefit from setting more than that
+worker_processes auto; #some last versions calculate it automatically
+
+# number of file descriptors used for nginx
+# the limit for the maximum FDs on the server is usually set by the OS.
+# if you don't set FD's then OS settings will be used which is by default 2000
+worker_rlimit_nofile 100000;
+
+# only log critical errors
+error_log /var/log/nginx/error.log crit;
+
+# provides the configuration file context in which the directives that affect connection processing are specified.
+events {
+    # determines how much clients will be served per worker
+    # max clients = worker_connections * worker_processes
+    # max clients is also limited by the number of socket connections available on the system (~64k)
+    worker_connections 4000;
+
+    # optimized to serve many clients with each thread, essential for linux -- for testing environment
+    use epoll;
+
+    # accept as many connections as possible, may flood worker connections if set too low -- for testing environment
+    multi_accept on;
+}
+
+http {
+    # cache informations about FDs, frequently accessed files
+    # can boost performance, but you need to test those values
+    open_file_cache max=200000 inactive=20s;
+    open_file_cache_valid 30s;
+    open_file_cache_min_uses 2;
+    open_file_cache_errors on;
+
+    # to boost I/O on HDD we can disable access logs
+    access_log off;
+
+    # copies data between one FD and other from within the kernel
+    # faster than read() + write()
+    sendfile on;
+
+    # send headers in one piece, it is better than sending them one by one
+    tcp_nopush on;
+
+    # don't buffer data sent, good for small data bursts in real time
+    tcp_nodelay on;
+
+    # reduce the data that needs to be sent over network -- for testing environment
+    gzip on;
+    # gzip_static on;
+    gzip_min_length 10240;
+    gzip_comp_level 1;
+    gzip_vary on;
+    gzip_disable msie6;
+    gzip_proxied expired no-cache no-store private auth;
+    gzip_types
+        # text/html is always compressed by HttpGzipModule
+        text/css
+        text/javascript
+        text/xml
+        text/plain
+        text/x-component
+        application/javascript
+        application/x-javascript
+        application/json
+        application/xml
+        application/rss+xml
+        application/atom+xml
+        font/truetype
+        font/opentype
+        application/vnd.ms-fontobject
+        image/svg+xml;
+
+    # allow the server to close connection on non responding client, this will free up memory
+    reset_timedout_connection on;
+
+    # request timed out -- default 60
+    client_body_timeout 10;
+
+    # if client stop responding, free up memory -- default 60
+    send_timeout 2;
+
+    # server will close connection after this time -- default 75
+    keepalive_timeout 30;
+
+    # number of requests client can make over keep-alive -- for testing environment
+    keepalive_requests 100000;
+}
 ```
 
-#### Benchmark after NGINX (4 servers)
+After making changes to servers, make sure to run the following two commands in your NGINX instance
+`sudo service nginx reload`
+`sudo service nginx restart`
+
+To test that your config is set up correctly
+`nginx -t`
+
+
+
+#### Benchmark after NGINX
 | Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
 |-----------------|-------|-------|---------|------------|------------|
 | **Original**        | GET   | 1000  | 5062ms  | 7630rpm    | 22.9%      |
 | Redis           | GET   | 1000  |    4365ms     |     23942rpm       |      0.0%      |
 | MySQL Partition | GET   | 1000  |    4369ms     |     23595rpm       |      0.0%      |
-| Custom Load Balancer   | GET   | 1000  |    63ms     |     60000rpm       |      0.0%    |
-| NGINX   | GET   | 1000  |    4626ms     |     15035rpm       |      11.53%    |
+| Custom Load Balancer  | GET   | 1000  |    4626ms     |     15035rpm       |      11.53%    |
+| NGINX (4 servers)   | GET   | 1000  |    63ms     |     60000rpm       |      0.0%    |
 | **Original**        | GET   | 2000  | 8968ms  | 7702rpm    | 43.1%      |
 | Redis           | GET   | 2000  |    8064ms     |      14738rpm      |      37.7%      |
 | MySQL Partition | GET   | 2000  |    8487ms     |      16717rpm      |      29.3%      |
 | Custom Load Balancer   | GET   | 2000  |    6924ms     |      14657rpm      |      36.6%      |
-| NGINX  | GET   | 2000  |    243ms     |      119879rpm      |      0.0%      |
+| NGINX (4 servers) | GET   | 2000  |    243ms     |      119879rpm      |      0.0%      |
 | **Original**        | GET   | 5000  | error   | error      | error      |
 | Redis           | GET   | 5000  |     error    |     error       |      error      |
 | MySQL Partition | GET   | 5000  |     error    |     error       |      error      |
 | Custom Load Balancer   | GET   | 5000  |     error    |     error       |      error      |
-| NGINX  | GET   | 5000  |     2042ms    |     74671rpm       |      50.6%      |
+| NGINX (4 servers) | GET   | 5000  |     2042ms    |     74671rpm       |      50.6%      |
+| NGINX (6 servers) | GET   | 5000  |     2676ms    |     145311rpm       |      15.7%%      |
 | **Original**        | GET   | 10000 | error   | error      | error      |
 | Redis           | GET   | 10000 |     error    |     error       |      error      |
 | MySQL Partition | GET   | 10000 |     error    |     error       |      error      |
 | Custom Load Balancer   | GET   | 10000 |     error    |     error       |      error      |
 | NGINX   | GET   | 10000 |     error    |     error       |      error      |
 
-sudo vim client/dist/loaderio-ee6b522da90430a805a44750600b6efa.txt
-loaderio-ee6b522da90430a805a44750600b6efa
+After changing MySQL's max connections limit from 151 to 200, the error rate dropped from the above 15.7% to 7.5%
+| Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
+|-----------------|-------|-------|---------|------------|------------|
+| NGINX (6 servers) | GET   | 5000  |     2370ms    |     177271rpm       |      7.5%%      |
+
+After changing MySQL's max connections limit from 200 to 100, the error rate dropped down to 5.2%
+| Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
+|-----------------|-------|-------|---------|------------|------------|
+| NGINX (6 servers) | GET   | 5000  |     3382ms    |     145223rpm       |      0%      |

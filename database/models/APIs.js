@@ -17,6 +17,7 @@ let images = {
 
 module.exports = {
   getOne: (gameId, callback) => {
+    let startTime = Date.now();
     if (envDb === 'mySql') {
       let partition = '';
       if (gameId < 1000000) {
@@ -51,16 +52,10 @@ module.exports = {
             throw err;
           } else {
             // console.log('RESULTS --->', results);
+            console.log('query duration:', Date.now() - startTime + 'ms');
             callback(null, results);
           }
       });
-      // try {
-      //   let results = await dbM.pool.query(queryString)
-      //   callback(results);
-      // } catch (error) {
-      //   console.log('error in catch:', error);
-      //   throw error;
-      // }
     } else if (envDb === 'cassandra') {
       let queryString = `SELECT * FROM photo_carousel.games WHERE game_id = ${gameId}`;
 
