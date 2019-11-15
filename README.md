@@ -32,7 +32,8 @@
      - [3.7.1 Server Side Rendering](#371-server-side-rendering)
      - [3.7.2 Redis Cache](#372-redis-cache)
      - [3.7.3 MySQL Partitions](#373-mysql-partitions)
-     - [3.7.4 Load Balancer](#374-load-balancer)
+     - [3.7.4 Custom Load Balancer](#374-custom-load-balancer)
+     - [3.7.5 NGINX Load Balancer](#374-nginx-load-balancer)
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
@@ -518,13 +519,13 @@ In order to check if the config file loaded, you can use
 #### Benchmark after adding Redis on separate instance
 | Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
 |-----------------|-------|-------|---------|------------|------------|
-| **Original**        | GET   | 1000  | 5062ms  | 7630rpm    | 22.9%      |
-| Redis           | GET   | 1000  |    4369ms     |     23595rpm       |      0.0%      |
-| **Original**        | GET   | 2000  | 8968ms  | 7702rpm    | 43.1%      |
-| Redis           | GET   | 2000  |    8487ms     |      16717rpm      |      29.3%      |
-| **Original**        | GET   | 5000  | error   | error      | error      |
+| **Original**    | GET   | 1000  | 5062ms  | 7630rpm    | 22.9%      |
+| Redis           | GET   | 1000  | 4369ms     |     23595rpm       |      0.0%      |
+| **Original**    | GET   | 2000  | 8968ms  | 7702rpm    | 43.1%      |
+| Redis           | GET   | 2000  | 8487ms     |      16717rpm      |      29.3%      |
+| **Original**    | GET   | 5000  | error   | error      | error      |
 | Redis           | GET   | 5000  |     error    |     error       |      error      |
-| **Original**        | GET   | 10000 | error   | error      | error      |
+| **Original**    | GET   | 10000 | error   | error      | error      |
 | Redis           | GET   | 10000 |    error     |     error       |     error       |
 
 ### 3.7.3 MySQL Partitions
@@ -557,26 +558,26 @@ Query to see partitions
 Query example to select rows from specific partition
 `SELECT * FROM games WHERE game_id BETWEEN '1' AND '999999';`
 
-### 3.7.4 Load Balancer
+### 3.7.4 Custom Load Balancer
 #### Benchmark after Load Balancer - 1st attempt
 | Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
 |-----------------|-------|-------|---------|------------|------------|
 | **Original**        | GET   | 1000  | 5062ms  | 7630rpm    | 22.9%      |
 | Redis           | GET   | 1000  |    4365ms     |     23942rpm       |      0.0%      |
 | MySQL Partition | GET   | 1000  |    4369ms     |     23595rpm       |      0.0%      |
-| Load Balancer   | GET   | 1000  |    4626ms     |     15035rpm       |      11.53%    |
+| Custom Load Balancer   | GET   | 1000  |    4626ms     |     15035rpm       |      11.53%    |
 | **Original**        | GET   | 2000  | 8968ms  | 7702rpm    | 43.1%      |
 | Redis           | GET   | 2000  |    8064ms     |      14738rpm      |      37.7%      |
 | MySQL Partition | GET   | 2000  |    8487ms     |      16717rpm      |      29.3%      |
-| Load Balancer   | GET   | 2000  |    6924ms     |      14657rpm      |      36.6%      |
+| Custom Load Balancer   | GET   | 2000  |    6924ms     |      14657rpm      |      36.6%      |
 | **Original**        | GET   | 5000  | error   | error      | error      |
 | Redis           | GET   | 5000  |     error    |     error       |      error      |
 | MySQL Partition | GET   | 5000  |     error    |     error       |      error      |
-| Load Balancer   | GET   | 5000  |     error    |     error       |      error      |
+| Custom Load Balancer   | GET   | 5000  |     error    |     error       |      error      |
 | **Original**        | GET   | 10000 | error   | error      | error      |
 | Redis           | GET   | 10000 |     error    |     error       |      error      |
 | MySQL Partition | GET   | 10000 |     error    |     error       |      error      |
-| Load Balancer   | GET   | 10000 |     error    |     error       |      error      |
+| Custom Load Balancer   | GET   | 10000 |     error    |     error       |      error      |
 
 Steps to launch load balancer:
 1. Start new EC2 instances
@@ -591,3 +592,36 @@ I created my own load balancing code in the server by using the http request met
 **Error: Invalid protocol: ec2-13-56-149-165.us-west-1.compute.amazonaws.com**
 **Resolution**
 My EC2 instances for the extra servers were using different ports and my security group wasn't allowing for those different ports. So I had to change that but in addition, in my config file, I forgot to include http:// at the beginning and the port number at the end.
+
+
+### 3.7.5 NGINX Load Balancer
+```
+sudo amazon-linux-extras install nginx1
+```
+
+#### Benchmark after NGINX (4 servers)
+| Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
+|-----------------|-------|-------|---------|------------|------------|
+| **Original**        | GET   | 1000  | 5062ms  | 7630rpm    | 22.9%      |
+| Redis           | GET   | 1000  |    4365ms     |     23942rpm       |      0.0%      |
+| MySQL Partition | GET   | 1000  |    4369ms     |     23595rpm       |      0.0%      |
+| Custom Load Balancer   | GET   | 1000  |    63ms     |     60000rpm       |      0.0%    |
+| NGINX   | GET   | 1000  |    4626ms     |     15035rpm       |      11.53%    |
+| **Original**        | GET   | 2000  | 8968ms  | 7702rpm    | 43.1%      |
+| Redis           | GET   | 2000  |    8064ms     |      14738rpm      |      37.7%      |
+| MySQL Partition | GET   | 2000  |    8487ms     |      16717rpm      |      29.3%      |
+| Custom Load Balancer   | GET   | 2000  |    6924ms     |      14657rpm      |      36.6%      |
+| NGINX  | GET   | 2000  |    243ms     |      119879rpm      |      0.0%      |
+| **Original**        | GET   | 5000  | error   | error      | error      |
+| Redis           | GET   | 5000  |     error    |     error       |      error      |
+| MySQL Partition | GET   | 5000  |     error    |     error       |      error      |
+| Custom Load Balancer   | GET   | 5000  |     error    |     error       |      error      |
+| NGINX  | GET   | 5000  |     2042ms    |     74671rpm       |      50.6%      |
+| **Original**        | GET   | 10000 | error   | error      | error      |
+| Redis           | GET   | 10000 |     error    |     error       |      error      |
+| MySQL Partition | GET   | 10000 |     error    |     error       |      error      |
+| Custom Load Balancer   | GET   | 10000 |     error    |     error       |      error      |
+| NGINX   | GET   | 10000 |     error    |     error       |      error      |
+
+sudo vim client/dist/loaderio-ee6b522da90430a805a44750600b6efa.txt
+loaderio-ee6b522da90430a805a44750600b6efa

@@ -70,6 +70,8 @@ app.get('/api/overviewImage/:gameId', (req, res) => {
   }
 });
 
+/*
+// load balancer
 const profilerMiddleware = (req, res, next) => {
   const start = Date.now();
   // The 'finish' event comes from core Node.js, it means Node is done handing
@@ -82,8 +84,6 @@ const profilerMiddleware = (req, res, next) => {
 
 app.use(profilerMiddleware);
 
-/*
-// load balancer
 let cur = 0;
 app.get('/api/images/:gameId/', (req, res) => {
   let gameId = req.params.gameId;
@@ -105,6 +105,7 @@ app.get('/api/images/:gameId/', (req, res) => {
 app.get('/api/images/:gameId/', async (req, res) => {
   const game_name = req.params.game_name;
   let gameId = req.params.gameId;
+  let startTime = Date.now();
   // console.log('gameId', gameId);
 
   redisClient.get(gameId, (err, redisResult) => {
@@ -129,6 +130,7 @@ app.get('/api/images/:gameId/', async (req, res) => {
               redisClient.set(gameId, JSON.stringify(dbResult), redis.print);
               // return data
               res.send(dbResult);
+              console.log(`mysql time duration:`, Date.now() - startTime);
             }
           });
        } catch(err) {
@@ -137,6 +139,7 @@ app.get('/api/images/:gameId/', async (req, res) => {
       }
     } else {
       res.send(redisResult)
+      console.log(`redis time duration:`, Date.now() - startTime);
     }
     });
 });

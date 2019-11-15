@@ -32,9 +32,11 @@ pool.getConnection((err, connection) => {
   return
 });
 
+/*
 pool.query('SET GLOBAL connect_timeout=28800');
 pool.query('SET GLOBAL wait_timeout=28800');
 pool.query('SET GLOBAL interactive_timeout=28800');
+*/
 
 pool.query = util.promisify(pool.query);
 
