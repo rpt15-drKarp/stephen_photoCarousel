@@ -48,13 +48,14 @@ module.exports = {
       // let queryString = `SELECT * FROM games WHERE game_id = '${gameId}'`;
 
       dbM.pool.query(queryString, function(err, results) {
-          if (err) {
-            throw err;
-          } else {
-            // console.log('RESULTS --->', results);
-            console.log('query duration:', Date.now() - startTime + 'ms');
-            callback(null, results);
-          }
+        connection.release();
+        if (err) {
+          throw err;
+        } else {
+          // console.log('RESULTS --->', results);
+          console.log('query duration:', Date.now() - startTime + 'ms');
+          callback(null, results);
+        }
       });
     } else if (envDb === 'cassandra') {
       let queryString = `SELECT * FROM photo_carousel.games WHERE game_id = ${gameId}`;
@@ -79,6 +80,7 @@ module.exports = {
       } else {
         // console.log('RESULTS --->', results);
         callback(results);
+        dbM.pool.releaseConnection();
       }
     });
     } else if (envDb === 'cassandra') {

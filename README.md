@@ -34,6 +34,7 @@
      - [3.7.3 MySQL Partitions](#373-mysql-partitions)
      - [3.7.4 Custom Load Balancer](#374-custom-load-balancer)
      - [3.7.5 NGINX Load Balancer](#375-nginx-load-balancer)
+4. [Pro Tips](#pro-tips)
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
@@ -738,3 +739,50 @@ After changing MySQL's max connections limit from 200 to 100, the error rate dro
 | Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
 |-----------------|-------|-------|---------|------------|------------|
 | NGINX (6 servers) | GET   | 5000  |     3382ms    |     145223rpm       |      0%      |
+
+After creating the multiple servers I installed an npm module called "mysql-pool-booster" and it decreased my latency by about 1000ms
+
+| Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
+|-----------------|-------|-------|---------|------------|------------|
+| NGINX (6 servers) | GET   | 5000  |     1985ms    |     217612rpm       |      0.2%      |
+
+After adding 2 more servers
+
+| Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
+|-----------------|-------|-------|---------|------------|------------|
+| NGINX (6 servers) | GET   | 5000  |     1985ms    |     217612rpm       |      0.2%      |
+| NGINX (8 servers) | GET   | 5000  |     418ms    |     293478rpm       |      0.0%      |
+| NGINX (8 servers) | GET   | 6000  |     2254ms    |     213137rpm       |      6.5%      |
+| NGINX (8 servers with Medium instance) | GET   | 65000 |     1565ms    |     309611rpm       |      0.9%      |
+| NGINX (8 servers with Medium instance - 200 max connections) | GET   | 10000  |     2530ms    |     289788rpm       |      20.2%      |
+| NGINX (8 servers with Medium instance - 100 max connections) | GET   | 10000  |     2437ms    |     292481rpm       |      22.2%      |
+
+## 4. Pro Tips
+#### Create images on AWS
+- Select your instance on EC2 dashboard
+- Click Actions -> Image -> Create Image
+
+Then when you create a new instance later, load up your AMI.
+
+By creating an image, you'll save everything that was created and installed on that current instance so that you don't have to rebuild everything whenever you create a new instance.
+
+#### Keep your SSH session from freezing after inactivity
+Update config at ssh_config
+`sudo vim /etc/ssh/ssh_config`
+`Host *`
+`ServerAliveInterval 100`
+
+Update config at sshd_config
+```
+sudo vim /etc/ssh/sshd_config
+ClientAliveInterval 60
+TCPKeepAlive yes
+ClientAliveCountMax 10000
+```
+
+**ClientAliveInterval** - server will wait 60 seconds before sending null packet to client to keep the connection alive
+**TCPKeepAlive** - makes sure certain firewalls don't drop idle connections
+**ClientAliveCountMax** - Server sends messages to client even though it hasn't received any message back from client
+
+Restart ssh server
+`sudo systemctl restart sshd`
