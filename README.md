@@ -740,6 +740,23 @@ After changing MySQL's max connections limit from 200 to 100, the error rate dro
 |-----------------|-------|-------|---------|------------|------------|
 | NGINX (6 servers) | GET   | 5000  |     3382ms    |     145223rpm       |      0%      |
 
+After creating the multiple servers I installed an npm module called "mysql-pool-booster" and it decreased my latency by about 1000ms
+
+| Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
+|-----------------|-------|-------|---------|------------|------------|
+| NGINX (6 servers) | GET   | 5000  |     1985ms    |     217612rpm       |      0.2%      |
+
+After adding 2 more servers
+
+| Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
+|-----------------|-------|-------|---------|------------|------------|
+| NGINX (6 servers) | GET   | 5000  |     1985ms    |     217612rpm       |      0.2%      |
+| NGINX (8 servers) | GET   | 5000  |     418ms    |     293478rpm       |      0.0%      |
+| NGINX (8 servers) | GET   | 6000  |     2254ms    |     213137rpm       |      6.5%      |
+| NGINX (8 servers with Medium instance) | GET   | 65000 |     1565ms    |     309611rpm       |      0.9%      |
+| NGINX (8 servers with Medium instance - 200 max connections) | GET   | 10000  |     2530ms    |     289788rpm       |      20.2%      |
+| NGINX (8 servers with Medium instance - 100 max connections) | GET   | 10000  |     2437ms    |     292481rpm       |      22.2%      |
+
 ## 4. Pro Tips
 #### Create images on AWS
 - Select your instance on EC2 dashboard
