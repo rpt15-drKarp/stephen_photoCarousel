@@ -34,6 +34,7 @@
      - [3.7.3 MySQL Partitions](#373-mysql-partitions)
      - [3.7.4 Custom Load Balancer](#374-custom-load-balancer)
      - [3.7.5 NGINX Load Balancer](#375-nginx-load-balancer)
+4. [Pro Tips](#pro-tips)
 
 ## 1. Usage
 This service is part of a game page on the Steam website.
@@ -733,8 +734,38 @@ After changing MySQL's max connections limit from 151 to 200, the error rate dro
 |-----------------|-------|-------|---------|------------|------------|
 | NGINX (6 servers) | GET   | 5000  |     2370ms    |     177271rpm       |      7.5%%      |
 
-After changing MySQL's max connections limit from 200 to 100, the error rate dropped down to 5.2%
+After changing MySQL's max connections limit from 200 to 100, the error rate dropped down to 0.0%
 
 | Strategy        | Route | RPS   | Latency | Throughput | Error Rate |
 |-----------------|-------|-------|---------|------------|------------|
 | NGINX (6 servers) | GET   | 5000  |     3382ms    |     145223rpm       |      0%      |
+
+## 4. Pro Tips
+#### Create images on AWS
+- Select your instance on EC2 dashboard
+- Click Actions -> Image -> Create Image
+
+Then when you create a new instance later, load up your AMI.
+
+By creating an image, you'll save everything that was created and installed on that current instance so that you don't have to rebuild everything whenever you create a new instance.
+
+#### Keep your SSH session from freezing after inactivity
+Update config at ssh_config
+`sudo vim /etc/ssh/ssh_config`
+`Host *`
+`ServerAliveInterval 100`
+
+Update config at sshd_config
+```
+sudo vim /etc/ssh/sshd_config
+ClientAliveInterval 60
+TCPKeepAlive yes
+ClientAliveCountMax 10000
+```
+
+**ClientAliveInterval** - server will wait 60 seconds before sending null packet to client to keep the connection alive
+**TCPKeepAlive** - makes sure certain firewalls don't drop idle connections
+**ClientAliveCountMax** - Server sends messages to client even though it hasn't received any message back from client
+
+Restart ssh server
+`sudo systemctl restart sshd`
