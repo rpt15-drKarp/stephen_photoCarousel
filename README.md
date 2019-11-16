@@ -786,3 +786,14 @@ ClientAliveCountMax 10000
 
 Restart ssh server
 `sudo systemctl restart sshd`
+
+#### MySQL Query Profiling (check query speed)
+`SET PROFILING = 1;`
+
+Run queries that you want to profile
+`SELECT * FROM games WHERE game_id = 9500000;`
+`SELECT * FROM games PARTITION (p9) WHERE game_id = 9500000;`
+
+Show profiles to look at query speeds
+`SHOW PROFILES;`
+
